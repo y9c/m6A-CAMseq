@@ -1,4 +1,4 @@
-# m<sup>5</sup>C-UBSseq
+# m<sup>6</sup>A-CAMseq
 
 &nbsp;
 
