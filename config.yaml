@@ -1,0 +1,28 @@
+ref:
+  genome:
+    fa: ~/reference/genome/Homo_sapiens/GRCh38.fa
+    gtf: ~/reference/genome/Homo_sapiens/GRCh38.release110.gtf
+    hisat3n: ~/reference/genome/Homo_sapiens/hisat2_tx_3n/GRCh38.release110
+
+path:
+  cutadapt: ~/.micromamba/bin/cutadapt
+  samtools: ~/tools/samtools/samtools
+  star: ~/tools/STAR/bin/Linux_x86_64/STAR
+  falco: ~/tools/falco-0.2.4/falco
+  bamtools: ~/.local/bin/bamtools
+  hisat3n: ~/tools/hisat2/hisat-3n
+  hisat3ntable: ~/tools/hisat2/hisat-3n-table
+  umicollapse: ~/tools/UMICollapse/umicollapse.jar
+
+spike:
+  - ../ref/spike-in_with_N.fa
+  - ~/reference/genes/Homo_sapiens.rRNA_sncRNA.fa
+base_change: 'A,G'
+splice_genome: true
+strandness: R
+libtype: 'eCLIP'
+samples:
+  test1:
+    data:
+      - R1: ~/rawdata/test_R1_001.fastq.gz
+        R2: ~/rawdata/test_R2_001.fastq.gz
