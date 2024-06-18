@@ -1,5 +1,7 @@
 # m<sup>6</sup>A-CAMseq
 
+![diagram](./docs/diagram.svg)
+
 ## System Requirements
 
 This package has been tested on Linux operating systems. It requires the following software dependencies:
