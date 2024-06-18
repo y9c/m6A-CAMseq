@@ -6,7 +6,7 @@ This package has been tested on Linux operating systems. It requires the followi
 
 - [Python](https://www.python.org/downloads/) 3.7 or higher
 - [Snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) 8.0.0 or higher
-- hiast2 (3n branch)
+- [hisat2-3n](https://github.com/DaehwanKimLab/hisat2/tree/hisat-3n)
 - cutseq
 
 ## Qucik start
