@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 
-workdir: config["workdir"]
+workdir: Path(workflow.basedir) / config.get("workdir", "workspace")
 
 
 TEMPDIR = Path(
@@ -239,16 +239,18 @@ rule drop_duplicates:
     threads: 16
     run:
         if WITH_UMI:
+            # /software/java-15.0.2-el8-x86_64/bin/java
             shell(
                 """
-            /software/java-15.0.2-el8-x86_64/bin/java -server -Xms8G -Xmx40G -Xss100M -Djava.io.tmpdir={params.tempdir} -jar {params.path_umicollapse} bam \
+            java -server -Xms8G -Xmx36G -Xss100M -Djava.io.tmpdir={params.tempdir} -jar {PATH[umicollapse]} bam \
                 -t 2 -T {threads} --data naive --merge avgqual --two-pass -i {input.bam} -o {output.bam} >{output.txt}
             """
             )
         elif MARKDUP:
+            # ~/tools/jdk8u322-b06-jre/bin/java
             shell(
                 """
-            ~/tools/jdk8u322-b06-jre/bin/java -Xmx36G -jar ~/tools/gatk-4.2.5.0/gatk-package-4.2.5.0-local.jar MarkDuplicates \
+            java -Xms8G -Xmx36G -Xss100M -jar {PATH[gatk]} MarkDuplicates \
                 -I {input} -O {output.bam} -M {output.txt} \
                 --DUPLICATE_SCORING_STRATEGY SUM_OF_BASE_QUALITIES --REMOVE_DUPLICATES true --VALIDATION_STRINGENCY SILENT --TMP_DIR {params.tempdir}
             """

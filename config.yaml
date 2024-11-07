@@ -2,11 +2,11 @@
 path:
   cutseq: ~/.micromamba/bin/cutseq
   samtools: ~/tools/samtools/samtools
-  bamtools: ~/.local/bin/bamtools
   hisat3n: ~/tools/hisat2/hisat-3n
   hisat3nbuild: ~/tools/hisat2/hisat-3n-build
   hisat3ntable: ~/tools/hisat2/hisat-3n-table
   umicollapse: ~/tools/UMICollapse/umicollapse.jar
+  gatk: ~/tools/gatk-4.2.5.0/gatk-package-4.2.5.0-local.jar
 
 base_change: 'A,G'
 splice_genome: true
