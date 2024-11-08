@@ -23,29 +23,15 @@ schema = {
             "type": "object",
             "patternProperties": {
                 "^.*$": {
-                    "type": "object",
-                    "properties": {
-                        "data": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "patternProperties": {
-                                    "R1": {"type": "string"},
-                                    "R2": {"type": "string"},
-                                },
-                                "required": ["R1"],
-                            },
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "patternProperties": {
+                            "R1": {"type": "string"},
+                            "R2": {"type": "string"},
                         },
-                        "group": {
-                            "oneOf": [
-                                {"type": "string"},
-                                {"type": "array", "items": {"type": "string"}},
-                            ]
-                        },
-                        "treated": {"type": "boolean"},
-                        "barcode": {"type": "string"},
+                        "required": ["R1"],
                     },
-                    "required": ["data"],
                 }
             },
         },

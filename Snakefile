@@ -28,12 +28,12 @@ WITH_UMI = LIBTYPE in ["ECLIP10", "ECLIP6", "TAKARAV3"]
 MARKDUP = config.get("markdup", True)
 
 
-GENES_FASTA = config.get("spike", [])
-GENOME_FASTA = config.get("genome", [])
+GENES_FASTA = config["reference"].get("genes", [])
+GENOME_FASTA = config["reference"].get("genome", [])
 
 SAMPLE2DATA = defaultdict(lambda: defaultdict(dict))
 for s, v in config[f"samples"].items():
-    for i, v2 in enumerate(v["data"], 1):
+    for i, v2 in enumerate(v, 1):
         r = f"run{i}"
         SAMPLE2DATA[str(s)][r] = {
             k: os.path.expanduser(v3) for k, v3 in dict(v2).items()

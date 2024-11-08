@@ -16,19 +16,18 @@ libtype: STRANDED
 
 workdir: workspace
 
-spike:
-  - ../test/spike-in.fa
-  - ../test/ERCC92.fa
-  - ~/reference/rRNA/Arabidopsis_thaliana.rRNA.fa
-
-genome:
-  - /data/reference/genome/Arabidopsis_thaliana/TAIR10.fa
-
 # TODO: if the genome index is not available, the pipeline will build it automatically
 genome_index: /data/reference/genome/Arabidopsis_thaliana/hisat2_tx_3n/TAIR10.release57
 
+reference:
+  genes:
+    - ../test/spike-in.fa
+    - ../test/ERCC92.fa
+    - ~/reference/rRNA/Arabidopsis_thaliana.rRNA.fa
+  genome:
+    - /data/reference/genome/Arabidopsis_thaliana/TAIR10.fa
+
 samples:
   test1:
-    data:
-      - R1: ../test/test_R1.fq.gz
-        R2: ../test/test_R2.fq.gz
+    - R1: ../test/test_R1.fq.gz
+      R2: ../test/test_R2.fq.gz
