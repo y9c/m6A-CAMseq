@@ -1,0 +1,19 @@
+workdir: workspace
+
+libtype: STRANDED
+
+base_change: 'A,G'
+markdup: true
+strandness: true
+gene_norc: true
+splice_genome: true
+
+# build in configure for the pipeline
+path:
+  cutseq: /pipeline/micromamba/bin/cutseq
+  samtools: /pipeline/micromamba/bin/samtools
+  hisat3n: /pipeline/hisat2-hisat-3n/hisat-3n
+  hisat3nbuild: /pipeline/hisat2-hisat-3n/hisat-3n-build
+  hisat3ntable: /pipeline/hisat2-hisat-3n/hisat-3n-table
+  umicollapse: /bin/umicollapse.jar
+  gatk: /bin/gatk.jar

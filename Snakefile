@@ -17,26 +17,39 @@ workdir: WORKDIR
 
 PATH = config["path"]
 
-STRANDNESS = config.get("strandness", True)
-GENE_NORC = config.get("gene_norc", True)
-BASE_CHANGE = (config.get("base_change", "A,G"),)
-SPLICE_GENOME = config.get("splice_genome", True)
 
-LIBTYPE = config.get("libtype", "")
-WITH_UMI = LIBTYPE in ["ECLIP10", "ECLIP6", "TAKARAV3"]
+LIBTYPE = config["libtype"]
+WITH_UMI = LIBTYPE in ["ECLIP10", "ECLIP6", "TAKARAV3", "SACSEQV3"]
 # config.get("with_umi", False)
 MARKDUP = config.get("markdup", True)
+STRANDNESS = config.get("strandness", True)
+GENE_NORC = config.get("gene_norc", True)
+BASE_CHANGE = config.get("base_change", "A,G")
+SPLICE_GENOME = config.get("splice_genome", True)
 
 
-GENES_FASTA = config["reference"].get("genes", [])
-GENOME_FASTA = config["reference"].get("genome", [])
+REF = config["reference"]
+for k, v in REF.items():
+    v3 = []
+    for v2 in v:
+        v2 = os.path.expanduser(v2)
+        v3.append(v2 if os.path.isabs(v2) else os.path.relpath(v2, WORKDIR))
+    REF[k] = v3
+
+GENES_FASTA = REF.get("genes", [])
+GENOME_FASTA = REF.get("genome", [])
 
 SAMPLE2DATA = defaultdict(lambda: defaultdict(dict))
 for s, v in config[f"samples"].items():
     for i, v2 in enumerate(v, 1):
         r = f"run{i}"
         SAMPLE2DATA[str(s)][r] = {
-            k: os.path.expanduser(v3) for k, v3 in dict(v2).items()
+            k: (
+                os.path.expanduser(v3)
+                if os.path.isabs(os.path.expanduser(v3))
+                else os.path.relpath(os.path.expanduser(v3), WORKDIR)
+            )
+            for k, v3 in dict(v2).items()
         }
 
 

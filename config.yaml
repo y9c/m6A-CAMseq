@@ -1,20 +1,9 @@
-# build in configure for the pipeline
-path:
-  cutseq: /pipeline/micromamba/bin/cutseq
-  samtools: /pipeline/micromamba/bin/samtools
-  hisat3n: /pipeline/hisat2-hisat-3n/hisat-3n
-  hisat3nbuild: /pipeline/hisat2-hisat-3n/hisat-3n-build
-  hisat3ntable: /pipeline/hisat2-hisat-3n/hisat-3n-table
-  umicollapse: /bin/umicollapse.jar
-  gatk: /bin/gatk.jar
-
-base_change: 'A,G'
-splice_genome: true
-libtype: STRANDED
-
 # project specific parameters including data and reference
 
 workdir: workspace
+base_change: 'A,G'
+splice_genome: true
+libtype: STRANDED
 
 # TODO: if the genome index is not available, the pipeline will build it automatically
 genome_index: /data/reference/genome/Arabidopsis_thaliana/hisat2_tx_3n/TAIR10.release57

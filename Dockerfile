@@ -22,6 +22,6 @@ RUN wget -qO- wget https://github.com/DaehwanKimLab/hisat2/archive/refs/heads/hi
 RUN apt-get purge -y wget bzip2 make xsltproc gcc g++ pkg-config unzip && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY ./bin /pipeline/bin
-COPY ./VERSION ./Snakefile ./config.yaml ./entrypoint ./validator /pipeline/
+COPY ./VERSION ./Snakefile ./default.yaml ./entrypoint ./validator /pipeline/
 RUN chmod +x /pipeline/entrypoint && chmod +x /pipeline/validator
 ENTRYPOINT ["/pipeline/entrypoint"]
