@@ -27,7 +27,7 @@ samples:
 - Install apptainer and run
 
 ```bash
-apptainer run -B /data docker://y9ch/camseq -c config.yaml -j 48
+apptainer run -B /data docker://y9ch/camseq -c data.yaml -j 48
 ```
 
 ## Customization
