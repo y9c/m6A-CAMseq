@@ -1,12 +1,12 @@
 # build in configure for the pipeline
 path:
-  cutseq: ~/.micromamba/bin/cutseq
-  samtools: ~/tools/samtools/samtools
-  hisat3n: ~/tools/hisat2/hisat-3n
-  hisat3nbuild: ~/tools/hisat2/hisat-3n-build
-  hisat3ntable: ~/tools/hisat2/hisat-3n-table
-  umicollapse: ~/tools/UMICollapse/umicollapse.jar
-  gatk: ~/tools/gatk-4.2.5.0/gatk-package-4.2.5.0-local.jar
+  cutseq: /pipeline/micromamba/bin/cutseq
+  samtools: /pipeline/micromamba/bin/samtools
+  hisat3n: /pipeline/hisat2-hisat-3n/hisat-3n
+  hisat3nbuild: /pipeline/hisat2-hisat-3n/hisat-3n-build
+  hisat3ntable: /pipeline/hisat2-hisat-3n/hisat-3n-table
+  umicollapse: /bin/umicollapse.jar
+  gatk: /bin/gatk.jar
 
 base_change: 'A,G'
 splice_genome: true
@@ -19,13 +19,13 @@ workdir: workspace
 spike:
   - ../test/spike-in.fa
   - ../test/ERCC92.fa
-  - ~/reference/genes/Arabidopsis_thaliana.rRNA.fa
+  - ~/reference/rRNA/Arabidopsis_thaliana.rRNA.fa
 
 genome:
-  - ~/reference/genome/Arabidopsis_thaliana/TAIR10.fa
+  - /data/reference/genome/Arabidopsis_thaliana/TAIR10.fa
 
 # TODO: if the genome index is not available, the pipeline will build it automatically
-genome_index: ~/reference/genome/Arabidopsis_thaliana/hisat2_tx_3n/TAIR10.release57
+genome_index: /data/reference/genome/Arabidopsis_thaliana/hisat2_tx_3n/TAIR10.release57
 
 samples:
   test1:

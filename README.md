@@ -15,16 +15,10 @@ This package has been tested on Linux operating systems. It requires the followi
 
 ### Installation guide
 
-Install snakemake and cutseq
+Install apptainer and run
 
 ```bash
-pip install snakemake cutseq
-```
-
-### Demo data
-
-```bash
-snakemake -s Snakefile --configfile config.yaml --cores 24
+apptainer run -B /data docker://y9ch/camseq -c config.yaml -j 48
 ```
 
 ## Documentation

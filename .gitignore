@@ -6,7 +6,7 @@ log/
 tmp/
 .snakemake/
 debug_*/
-BIDSEQ_LOG_*.txt
+CAMSEQ_LOG_*.txt
 .panoptes.db
 filter/
 

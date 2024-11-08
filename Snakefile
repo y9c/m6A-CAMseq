@@ -1,16 +1,21 @@
 from collections import defaultdict
 
 
-workdir: Path(workflow.basedir) / config.get("workdir", "workspace")
-
-
+WORKDIR = os.path.relpath(
+    config.get("workdir", "workspace"), os.path.dirname(workflow.configfiles[-1])
+)
 TEMPDIR = Path(
     os.path.relpath(
         config.get("tempdir", os.path.join(workflow.basedir, ".tmp")), workflow.basedir
     )
 )
-PATH = config["path"]
 INTERNALDIR = Path("internal_files")
+
+
+workdir: WORKDIR
+
+
+PATH = config["path"]
 
 STRANDNESS = config.get("strandness", True)
 GENE_NORC = config.get("gene_norc", True)
