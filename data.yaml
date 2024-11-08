@@ -1,8 +1,7 @@
 # project specific parameters including data and reference
-
 workdir: workspace
-base_change: 'A,G'
-splice_genome: true
+cores: 64
+
 libtype: STRANDED
 
 # TODO: if the genome index is not available, the pipeline will build it automatically

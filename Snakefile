@@ -150,8 +150,8 @@ rule extract_unmapped_reads_PE_from_genes:
     input:
         un=TEMPDIR / "genes_unmapped/PE/{sample}_{rn}.bam",
     output:
-        r1=TEMPDIR / "genes_unmapped/PE/{sample}_{rn}_R1.fq.gz",
-        r2=TEMPDIR / "genes_unmapped/PE/{sample}_{rn}_R2.fq.gz",
+        r1=temp(TEMPDIR / "genes_unmapped/PE/{sample}_{rn}_R1.fq.gz"),
+        r2=temp(TEMPDIR / "genes_unmapped/PE/{sample}_{rn}_R2.fq.gz"),
     shell:
         """
         {PATH[samtools]} fastq -1 {output.r1} -2 {output.r2} -0 /dev/null -s /dev/null -n {input}

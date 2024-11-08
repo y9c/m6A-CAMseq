@@ -55,7 +55,7 @@ fi
 if [ -z "${cores_cmd}" ]; then
   cores_conf=$(python -c 'import yaml, sys;print(yaml.safe_load(open(sys.argv[1],"r")).get("cores",""))' "${conf}")
   if [ -z "${cores_conf}" ]; then
-    cores=48
+    cores=64
   else
     cores=${cores_conf}
   fi
