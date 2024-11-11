@@ -307,8 +307,8 @@ rule stat_dedup:
     threads: 2
     shell:
         """
-        {PATH[samtools]} flagstat -@ {threads} -O TSV {input} > {output.stat}
-        {PATH[samtools]} view -@ {threads} -c -F 384 {input} > {output.n}
+        {PATH[samtools]} flagstat -@ {threads} -O TSV {input.bam} > {output.stat}
+        {PATH[samtools]} view -@ {threads} -c -F 384 {input.bam} > {output.n}
         """
 
 

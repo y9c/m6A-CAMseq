@@ -63,10 +63,11 @@ else
   cores=${cores_cmd}
 fi
 
+export LC_ALL=C.UTF-8
 LOGFILE="CAMSEQ_LOG_$(date +"%F-%H%M%S").txt"
 echo -e "\033[0;32mREAD DEBUG LOG AT\033[0m ${LOGFILE}"
 printf "\033[0;33m Analyzing...\033[0m"
-snakemake --rerun-incomplete --jobs "${cores}" --snakefile "${snake}" --configfiles /pipeline/default.yaml "${conf}" "$@" 1>"${LOGFILE}" 2>"${LOGFILE}"
+snakemake --rerun-incomplete --quiet rules --jobs "${cores}" --snakefile "${snake}" --configfiles /pipeline/default.yaml "${conf}" "$@" 1>"${LOGFILE}" 2>"${LOGFILE}"
 if [ $? -eq 0 ]; then
   printf "\033[0;33m\b\b\b\b\b\b\b\b\b\b\b\b\b\033[0m"
   printf "\033[0;32m\xE2\x9C\x94\033[0m Successfully finished all jobs.\n"
