@@ -20,7 +20,6 @@ PATH = config["path"]
 
 LIBTYPE = config["libtype"]
 WITH_UMI = LIBTYPE in ["ECLIP10", "ECLIP6", "TAKARAV3", "SACSEQV3"]
-# config.get("with_umi", False)
 MARKDUP = config.get("markdup", True)
 STRANDNESS = config.get("strandness", True)
 GENE_NORC = config.get("gene_norc", True)
@@ -65,6 +64,12 @@ rule all:
             sample=SAMPLE2DATA.keys(),
             reftype=["genes", "genome"],
         ),
+        [
+            INTERNALDIR / f"discarded_reads/{sample}_{rn}_unmap_{rd}.fq.gz"
+            for sample, v in SAMPLE2DATA.items()
+            for rn, v2 in v.items()
+            for rd in (["R1", "R2"] if len(v2) == 2 else ["R1"])
+        ],
 
 
 rule cutadapt_PE:
@@ -134,7 +139,7 @@ rule filter_and_sort_bam_genes:
         TEMPDIR / "genes_mapping/PE/{sample}_{rn}.bam",
     output:
         unmap=temp(TEMPDIR / "genes_unmapped/PE/{sample}_{rn}.bam"),
-        mapped=INTERNALDIR / "genes_bam/{sample}_{rn}.bam",
+        mapped=temp(TEMPDIR / "genes_bam/{sample}_{rn}.bam"),
     params:
         flt="flag.proper_pair && !flag.unmap && !flag.munmap"
         + (" && !flag.read1 != !flag.reverse" if (GENE_NORC and STRANDNESS) else ""),
@@ -188,7 +193,7 @@ rule filter_and_sort_bam_genome:
         TEMPDIR / "genome_mapping/PE/{sample}_{rn}.bam",
     output:
         unmap=temp(TEMPDIR / "genome_unmapped/{sample}_{rn}.bam"),
-        mapped=INTERNALDIR / "genome_bam/{sample}_{rn}.bam",
+        mapped=temp(TEMPDIR / "genome_bam/{sample}_{rn}.bam"),
     params:
         flt="flag.proper_pair && !flag.unmap && !flag.munmap",
     threads: 16
@@ -215,9 +220,9 @@ rule combine_runs:
     input:
         lambda wildcards: [
             (
-                INTERNALDIR / f"genes_bam/{wildcards.sample}_{r}.bam"
+                TEMPDIR / f"genes_bam/{wildcards.sample}_{r}.bam"
                 if wildcards.reftype == "genes"
-                else INTERNALDIR / f"genome_bam/{wildcards.sample}_{r}.bam"
+                else TEMPDIR / f"genome_bam/{wildcards.sample}_{r}.bam"
             )
             for r in SAMPLE2DATA[wildcards.sample]
         ],
@@ -257,7 +262,6 @@ rule drop_duplicates:
     threads: 16
     run:
         if WITH_UMI:
-            # /software/java-15.0.2-el8-x86_64/bin/java
             shell(
                 """
             java -server -Xms8G -Xmx36G -Xss100M -Djava.io.tmpdir={params.tempdir} -jar {PATH[umicollapse]} bam \
@@ -265,7 +269,6 @@ rule drop_duplicates:
             """
             )
         elif MARKDUP:
-            # ~/tools/jdk8u322-b06-jre/bin/java
             shell(
                 """
             java -Xms8G -Xmx36G -Xss100M -jar {PATH[gatk]} MarkDuplicates \
@@ -297,6 +300,7 @@ rule dedup_index:
 rule stat_dedup:
     input:
         bam=INTERNALDIR / "aligned_bam/{sample}.{reftype}.bam",
+        bai=INTERNALDIR / "aligned_bam/{sample}.{reftype}.bam.bai",
     output:
         stat="report_reads/dedup/{sample}.{reftype}.txt",
         n="report_reads/dedup/{sample}.{reftype}.count",
