@@ -2,7 +2,16 @@
 workdir: workspace
 cores: 64
 
+# can be "ECLIP10", "ECLIP6", "TAKARAV3", "SACSEQV3", "STRANDED"
 libtype: STRANDED
+
+# by default, the pipeline will use the strandness information from the library
+# if the strandness is not available, set the strandness to `false`
+# strandness: true
+
+# by default, the pipeline will force remove the PCR duplicates based on the UMI
+# if UMI is not available, you can toggle the markdup to `false` to skip the PCR duplicate removal
+# markdup: true
 
 # TODO: if the genome index is not available, the pipeline will build it automatically
 genome_index: /data/reference/genome/Arabidopsis_thaliana/hisat2_tx_3n/TAIR10.release57

@@ -173,7 +173,7 @@ rule hisat2_3n_mapping_genome_PE:
     params:
         index=config.get("genome_index"),
         basechange=BASE_CHANGE,
-        directional="--directional-mapping",
+        directional="--directional-mapping" if STRANDNESS else "",
         splice_args=(
             "--pen-noncansplice 20 --min-intronlen 20 --max-intronlen 20"
             if SPLICE_GENOME

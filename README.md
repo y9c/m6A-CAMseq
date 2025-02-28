@@ -6,12 +6,13 @@
 
 - Prepare configuration file
 
+_minimum configuration example:_
+
 ```yaml
 reference:
   genes:
-    - ../test/spike-in.fa
-    - ../test/ERCC92.fa
-    - ~/reference/rRNA/Arabidopsis_thaliana.rRNA.fa
+    - ./ref/spike-in.fa
+    - ./ref/Arabidopsis_thaliana.rRNA.fa
   genome:
     - /data/reference/genome/Arabidopsis_thaliana/TAIR10.fa
 
@@ -22,6 +23,22 @@ samples:
   test1:
     - R1: ../test/test_R1.fq.gz
       R2: ../test/test_R2.fq.gz
+```
+
+_advanced configuration:_
+
+```yaml
+# set library preparation method
+# can be "STRANDED", "ECLIP10", etc, refer to the cutseq documentation for more information
+libtype: STRANDED
+
+# by default, the pipeline will use the strandness information from the library
+# if the strandness is not available, set the strandness to `false`
+strandness: true
+
+# by default, the pipeline will force remove the PCR duplicates based on the UMI
+# if UMI is not available, you can toggle the markdup to `false` to skip the PCR duplicate removal
+markdup: true
 ```
 
 - Install apptainer and run
