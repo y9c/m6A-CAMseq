@@ -12,6 +12,8 @@ splice_genome: true
 path:
   cutseq: /usr/local/bin/cutseq
   samtools: /pipeline/samtools/samtools
+  umicollapse: java -server -Xms8G -Xmx36G -Xss100M -jar /pipeline/UMICollapse/umicollapse.jar bam
+  markduplicates: java -server -Xms8G -Xmx36G -Xss100M -jar /pipeline/gatk/gatk.jar MarkDuplicates
   hisat3n: /pipeline/hisat2-hisat-3n/hisat-3n
   hisat3nbuild: /pipeline/hisat2-hisat-3n/hisat-3n-build
   hisat3ntable: /pipeline/hisat2-hisat-3n/hisat-3n-table
