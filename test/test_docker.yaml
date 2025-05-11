@@ -1,0 +1,33 @@
+# project specific parameters including data and reference
+cores: 64
+
+workdir: workspace
+
+# can be "ECLIP10", "ECLIP6", "TAKARAV3", "SACSEQV3", "STRANDED"
+libtype: ECLIP10
+
+# TODO: if the genome index is not available, the pipeline will build it automatically
+genome_index: /data/reference/genome/Arabidopsis_thaliana/hisat2_tx_3n/TAIR10.release57
+
+reference:
+  contamination:
+    # Multiple contaminant reference files are allowed
+    - ref/Agrobacterium.fa.gz
+  genes:
+    # Multiple gene reference files are allowed
+    - ref/spikein.fa
+    - ref/ERCC92.fa
+    - ref/cress_rRNA.fa
+  genome:
+    # Only one genome is allowed
+    - /data/reference/genome/Arabidopsis_thaliana/TAIR10.fa
+
+samples:
+  cress1:
+    data:
+      - R1: data/cress1_R1.fq.gz
+        R2: data/cress1_R2.fq.gz
+  cress2:
+    data:
+      - R1: data/cress2_R1.fq.gz
+        R2: data/cress2_R2.fq.gz
