@@ -11,9 +11,9 @@ splice_genome: true
 # build in configure for the pipeline
 path:
   cutseq: /pipeline/micromamba/bin/cutseq
-  samtools: /pipeline/micromamba/bin/samtools
+  samtools: /pipeline/samtools/samtools
   hisat3n: /pipeline/hisat2-hisat-3n/hisat-3n
   hisat3nbuild: /pipeline/hisat2-hisat-3n/hisat-3n-build
   hisat3ntable: /pipeline/hisat2-hisat-3n/hisat-3n-table
-  umicollapse: /bin/umicollapse.jar
-  gatk: /bin/gatk.jar
+  joinPileup: /pipeline/bin/join_pileup.py
+  filterSites: /pipeline/bin/filter_sites.py

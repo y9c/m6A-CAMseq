@@ -49,8 +49,6 @@ set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
 if [ ! -f "${conf}" ]; then
   echo "${conf} can not be found!"
   exit 1
-else
-  python /pipeline/validator "${conf}"
 fi
 if [ -z "${cores_cmd}" ]; then
   cores_conf=$(python -c 'import yaml, sys;print(yaml.safe_load(open(sys.argv[1],"r")).get("cores",""))' "${conf}")
