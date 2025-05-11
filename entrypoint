@@ -51,7 +51,7 @@ if [ ! -f "${conf}" ]; then
   exit 1
 fi
 if [ -z "${cores_cmd}" ]; then
-  cores_conf=$(python -c 'import yaml, sys;print(yaml.safe_load(open(sys.argv[1],"r")).get("cores",""))' "${conf}")
+  cores_conf=$(python3 -c 'import yaml, sys;print(yaml.safe_load(open(sys.argv[1],"r")).get("cores",""))' "${conf}")
   if [ -z "${cores_conf}" ]; then
     cores=64
   else
