@@ -5,7 +5,7 @@ workdir: workspace
 
 path:
   # cutseq: ~/.micromamba/bin/cutseq
-  samtools: ~/tools/samtools/samtools
+  samtools: /usr/local/bin/samtools
   hisat3n: ~/tools/hisat2/hisat-3n
   hisat3nbuild: ~/tools/hisat2/hisat-3n-build
   hisat3ntable: ~/tools/hisat2/hisat-3n-table
@@ -16,7 +16,7 @@ path:
 libtype: ECLIP10
 
 # TODO: if the genome index is not available, the pipeline will build it automatically
-genome_index: ~/reference/genome/Arabidopsis_thaliana/hisat2_tx_3n/TAIR10.release57
+genome_index: /data/reference/genome/Arabidopsis_thaliana/hisat2_tx_3n/TAIR10.release57
 
 reference:
   contamination:
@@ -29,7 +29,7 @@ reference:
     - ref/cress_rRNA.fa
   genome:
     # Only one genome is allowed
-    - ~/reference/genome/Arabidopsis_thaliana/TAIR10.fa
+    - /data/reference/genome/Arabidopsis_thaliana/TAIR10.fa
 
 samples:
   cress1:

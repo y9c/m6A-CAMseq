@@ -10,7 +10,7 @@ splice_genome: true
 
 # build in configure for the pipeline
 path:
-  cutseq: /pipeline/micromamba/bin/cutseq
+  cutseq: /usr/local/bin/cutseq
   samtools: /pipeline/samtools/samtools
   hisat3n: /pipeline/hisat2-hisat-3n/hisat-3n
   hisat3nbuild: /pipeline/hisat2-hisat-3n/hisat-3n-build

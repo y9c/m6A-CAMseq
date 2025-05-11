@@ -17,6 +17,6 @@ RUN apt-get purge -y wget bzip2 make xsltproc gcc g++ pkg-config unzip && apt-ge
 
 COPY ./bin /pipeline/bin
 COPY ./VERSION ./Snakefile ./default.yaml ./entrypoint /pipeline/
-COPY ./external/trichromat/Snakefile ./external/trichromat/workflow_utils.py ./external/trichromat/default.yaml ./external/trichromat/config.schema.yaml /pipeline/trichromat/
+COPY ./external/trichromat/Snakefile ./external/trichromat/workflow_utils.py ./external/trichromat/default.yaml ./external/trichromat/config.schema.yaml /pipeline/external/trichromat/
 RUN chmod +x /pipeline/entrypoint
 ENTRYPOINT ["/pipeline/entrypoint"]
