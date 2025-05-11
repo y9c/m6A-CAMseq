@@ -6,7 +6,7 @@ ENV SAMTOOLS_VERSION="1.21"
 ENV GATK_VERSION="4.6.2.0"
 
 # install system dependencies
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y --no-install-recommends install ca-certificates tzdata apt-utils wget curl bzip2 unzip make gcc g++ pkg-config xsltproc zlib1g-dev libxml2-dev python3 python3-pip python3-distutils python-is-python3 && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y --no-install-recommends install ca-certificates tzdata apt-utils wget curl bzip2 unzip make gcc g++ pkg-config xsltproc zlib1g-dev libxml2-dev python3 python3-pip python3-distutils python-is-python3 default-jre && apt-get clean && rm -rf /var/lib/apt/lists/*
 # isntall samtools
 RUN mkdir -p /pipeline/samtools && wget -qO- https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 | tar -xjvf - -C /pipeline/samtools --strip-components 1 && cd /pipeline/samtools/ && ./configure --without-curses --disable-bz2 --disable-lzma --prefix=/pipeline/ && make -j
 # install hisat2-3n
