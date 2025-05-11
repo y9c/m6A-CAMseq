@@ -1,4 +1,3 @@
-test/
 ref/
 workspace/
 workspace_*/
@@ -9,10 +8,12 @@ debug_*/
 CAMSEQ_LOG_*.txt
 .panoptes.db
 filter/
+test/*.sif
 
-!test
-test/*
-!test/*.yaml
+# test/
+# !test
+# test/*
+# !test/*.yaml
 
 ######################### R ###########################
 
