@@ -48,8 +48,27 @@ advanced configuration: please refer to [docs/configuration.md](docs/configurati
 - Install apptainer and run
 
 ```bash
-apptainer run -B /data docker://y9ch/camseq:v2 -c data.yaml -j 48
+apptainer run docker://y9ch/camseq -c data.yaml -j 48
 ```
+
+NOTES:
+
+- apptainer cannot detect mounted partitions by default, you need to add `-B /partition_name` flag right after the `run` command.
+
+- If you work on a remote server with internet access, you can compile the pipeline first
+
+  ```bash
+  apptainer build camseq.sif docker://y9ch/camseq:v2
+
+  # then run the pipeline using the sif file
+  ptainer run camseq.sif -c data.yaml -j 48
+  ```
+
+- For using the previous version of pipeline (v1), try:
+
+  ```bash
+  apptainer run docker://y9ch/camseq:v1 -c data.yaml -j 48
+  ```
 
 ## Customization
 
@@ -66,7 +85,7 @@ This package has been tested on Linux operating systems. It requires the followi
 
 The documentation is available at [https://y9c.github.io/m6A-CAMseq/](https://y9c.github.io/m6A-CAMseq/)
 
-## Changlog
+## Changelog
 
 - update in May 11, 2025
   - data processing steps is now based on [trichromat](https://github.com/y9c/trichromat)
