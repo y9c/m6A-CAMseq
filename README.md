@@ -47,7 +47,7 @@ samples:
 
 advanced configuration: please refer to [docs/configuration.md](docs/configuration.md)
 
-- Install apptainer and run
+### step 2: Install apptainer and run
 
 ```bash
 apptainer run docker://y9ch/camseq -c data.yaml -j 48
@@ -61,9 +61,7 @@ apptainer run docker://y9ch/camseq -c data.yaml -j 48
 >
 > ```bash
 > apptainer build camseq.sif docker://y9ch/camseq:v2
->
-> # then run the pipeline using the sif file
-> ptainer run camseq.sif -c data.yaml -j 48
+> apptainer run camseq.sif -c data.yaml -j 48
 > ```
 
 > [!TIP]
