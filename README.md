@@ -30,6 +30,8 @@ reference:
     # Only one genome is allowed
     - /data/reference/genome/Arabidopsis_thaliana/TAIR10.fa
 
+# note that different from v1, a 3rd level of "data:" tag is added
+# this is a preserved behavior for future expansion
 samples:
   cress1:
     data:
