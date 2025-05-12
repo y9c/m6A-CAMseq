@@ -10,7 +10,7 @@ splice_genome: true
 
 # build in configure for the pipeline
 path:
-  cutseq: /usr/local/bin/cutseq
+  cutseq: /opt/app_venv/bin/cutseq
   samtools: /pipeline/samtools/samtools
   umicollapse: java -server -Xms8G -Xmx36G -Xss100M -jar /pipeline/UMICollapse/umicollapse.jar bam
   markduplicates: java -server -Xms8G -Xmx36G -Xss100M -jar /pipeline/gatk/gatk.jar MarkDuplicates
