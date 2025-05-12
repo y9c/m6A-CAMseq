@@ -72,7 +72,7 @@ rule hisat2_3n_calling_filtered:
         "report_sites/pileup/{sample}.{reftype}.tsv.gz",
     params:
         fa=lambda wildcards: (
-            INTERNALDIR / "genes_index/genes.fa"
+            INTERNALDIR / "reference_file/genes.fa"
             if wildcards.reftype == "genes"
             else REF["genome"][0]
         ),
