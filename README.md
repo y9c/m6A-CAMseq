@@ -42,7 +42,7 @@ samples:
 ```
 
 > [!WARNING]
-> ifferent from v1, a 3rd level of "data:" tag is added into "samples:" section
+> different from previous version (v1), a 3rd level of "data:" tag is added into "samples:" section
 > this is a preserved behavior for future expansion
 
 advanced configuration: please refer to [docs/configuration.md](docs/configuration.md)
