@@ -30,8 +30,6 @@ reference:
     # Only one genome is allowed
     - /data/reference/genome/Arabidopsis_thaliana/TAIR10.fa
 
-# note that different from v1, a 3rd level of "data:" tag is added
-# this is a preserved behavior for future expansion
 samples:
   cress1:
     data:
@@ -43,32 +41,37 @@ samples:
         R2: data/cress2_R2.fq.gz
 ```
 
+> [!WARNING]
+> ifferent from v1, a 3rd level of "data:" tag is added into "samples:" section
+> this is a preserved behavior for future expansion
+
 advanced configuration: please refer to [docs/configuration.md](docs/configuration.md)
 
-### step 2: Install apptainer and run
+- Install apptainer and run
 
 ```bash
 apptainer run docker://y9ch/camseq -c data.yaml -j 48
 ```
 
-NOTES:
+> [!TIP]
+> apptainer cannot detect mounted partitions by default, you need to add `-B /partition_name` flag right after the `run` command.
 
-- apptainer cannot detect mounted partitions by default, you need to add `-B /partition_name` flag right after the `run` command.
+> [!TIP]
+> If you work on a remote server with internet access, you can compile the pipeline first
+>
+> ```bash
+> apptainer build camseq.sif docker://y9ch/camseq:v2
+>
+> # then run the pipeline using the sif file
+> ptainer run camseq.sif -c data.yaml -j 48
+> ```
 
-- If you work on a remote server with internet access, you can compile the pipeline first
-
-  ```bash
-  apptainer build camseq.sif docker://y9ch/camseq:v2
-
-  # then run the pipeline using the sif file
-  ptainer run camseq.sif -c data.yaml -j 48
-  ```
-
-- For using the previous version of pipeline (v1), try:
-
-  ```bash
-  apptainer run docker://y9ch/camseq:v1 -c data.yaml -j 48
-  ```
+> [!TIP]
+> For using the previous version of pipeline (v1), try:
+>
+> ```bash
+> apptainer run docker://y9ch/camseq:v1 -c data.yaml -j 48
+> ```
 
 ## Customization
 
