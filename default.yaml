@@ -1,13 +1,3 @@
-workdir: workspace
-
-libtype: STRANDED
-
-base_change: 'A,G'
-markdup: true
-strandness: true
-gene_norc: true
-splice_genome: true
-
 # build in configure for the pipeline
 path:
   cutseq: /opt/app_venv/bin/cutseq
@@ -19,3 +9,29 @@ path:
   hisat3ntable: /pipeline/hisat2-hisat-3n/hisat-3n-table
   joinPileup: /pipeline/bin/join_pileup.py
   filterSites: /pipeline/bin/filter_sites.py
+
+# m6A method, use A to G mutation
+base_change: 'A,G'
+
+# can be "ECLIP10", "ECLIP6", "TAKARAV3", "SACSEQV3", "STRANDED"
+libtype: ECLIP6
+# with umi in the library or not
+with_umi: true
+# by default, the pipeline will force remove the PCR duplicates based on the UMI
+# if UMI is not available, you can toggle the markdup to `false` to skip the PCR duplicate removal
+markdup: true
+# by default, the pipeline will use the strandness information from the library
+# if the strandness is not available, set the strandness to `false`
+strandness: true
+
+## run the analysis
+workdir: workspace
+
+gene_norc: true
+splice_genome: true
+
+cutoff:
+  min_uncon: 1
+  min_depth: 10
+  min_ratio: 0.05
+  min_pval: 0.05

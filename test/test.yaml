@@ -4,13 +4,21 @@ cores: 64
 workdir: workspace
 
 path:
-  # cutseq: ~/.micromamba/bin/cutseq
+  cutseq: ~/.micromamba/bin/cutseq
   samtools: ~/tools/samtools/samtools
+  umicollapse: java -server -Xms8G -Xmx36G -Xss100M -jar ~/tools/UMICollapse/umicollapse.jar bam
+  markduplicates: java -server -Xms8G -Xmx36G -Xss100M -jar ~/tools/gatk-4.6.0.0/gatk-package-4.6.0.0-local.jar MarkDuplicates
   hisat3n: ~/tools/hisat2/hisat-3n
   hisat3nbuild: ~/tools/hisat2/hisat-3n-build
   hisat3ntable: ~/tools/hisat2/hisat-3n-table
   joinPileup: python ../../bin/join_pileup.py
   filterSites: python ../../bin/filter_sites.py
+
+cutoff:
+  min_uncon: 1
+  min_depth: 10
+  min_ratio: 0.05
+  min_pval: 0.05
 
 # can be "ECLIP10", "ECLIP6", "TAKARAV3", "SACSEQV3", "STRANDED"
 libtype: ECLIP10

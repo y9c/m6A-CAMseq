@@ -111,10 +111,10 @@ rule filter_sites:
     output:
         "report_sites/filtered/{reftype}.tsv.gz",
     params:
-        min_uncon=1,
-        min_depth=5,
-        min_ratio=0.05,
-        min_pval=1,
+        min_uncon=config.get("cutoff", {}).get("min_uncon", 1),
+        min_depth=config.get("cutoff", {}).get("min_depth", 10),
+        min_ratio=config.get("cutoff", {}).get("min_ratio", 0.05),
+        min_pval=config.get("cutoff", {}).get("min_pval", 1),
     threads: 8
     shell:
         """

@@ -64,6 +64,12 @@ This package has been tested on Linux operating systems. It requires the followi
 
 The documentation is available at [https://y9c.github.io/m6A-CAMseq/](https://y9c.github.io/m6A-CAMseq/)
 
+## Changlog
+
+- update in May 11, 2025
+  - data processing steps is now based on [trichromat](https://github.com/y9c/trichromat)
+  - m6A site detection and filtering is now automatically and have been combined with the pipeline
+
 &nbsp;
 
 <p align="center">
