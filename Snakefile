@@ -83,7 +83,7 @@ rule hisat2_3n_calling_filtered:
         {PATH[samtools]} view -@ {threads} -e "rlen < 100000 && [XM] * 20 <= (qlen-sclen) && [Zf] <= 3 && 3 * [Zf] <= [Zf] + [Yf]" -h {input} | \
             {PATH[hisat3ntable]} -p {threads} --alignments - --ref {params.fa} --output-name /dev/stdout --base-change {params.basechange} | \
             cut -f 1,2,3,5,7 | \
-            gzip -c > {output}
+            gzip > {output}
         """
 
 
