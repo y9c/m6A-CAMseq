@@ -4,7 +4,7 @@
 
 ## Qucik start
 
-- Prepare configuration file
+### step 1. Prepare configuration file
 
 minimum configuration example:
 
@@ -45,7 +45,7 @@ samples:
 
 advanced configuration: please refer to [docs/configuration.md](docs/configuration.md)
 
-- Install apptainer and run
+### step 2: Install apptainer and run
 
 ```bash
 apptainer run docker://y9ch/camseq -c data.yaml -j 48
