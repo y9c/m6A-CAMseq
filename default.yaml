@@ -6,7 +6,7 @@ path:
   markduplicates: java -server -Xms8G -Xmx36G -Xss100M -jar /pipeline/gatk/gatk.jar MarkDuplicates
   hisat3n: /pipeline/hisat2-hisat-3n/hisat-3n
   hisat3nbuild: /pipeline/hisat2-hisat-3n/hisat-3n-build
-  hisat3ntable: /pipeline/hisat2-hisat-3n/hisat-3n-table
+  pb: /pipeline/bin/pb
   joinPileup: /pipeline/bin/join_pileup.py
   filterSites: /pipeline/bin/filter_sites.py
 

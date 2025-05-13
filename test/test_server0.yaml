@@ -5,14 +5,15 @@ workdir: workspace
 
 path:
   cutseq: /usr/local/bin/cutseq
-  samtools: /usr/local/bin/samtools
+  samtools: /tools/bin/samtools
   umicollapse: java -server -Xms8G -Xmx36G -Xss100M -jar ~/tools/UMICollapse/umicollapse.jar bam
   markduplicates: java -server -Xms8G -Xmx36G -Xss100M -jar ~/tools/gatk-4.2.6.1/gatk-package-4.2.6.1-local.jar MarkDuplicates
   hisat3n: ~/tools/hisat2/hisat-3n
   hisat3nbuild: ~/tools/hisat2/hisat-3n-build
-  hisat3ntable: ~/tools/hisat2/hisat-3n-table
-  joinPileup: python ../../bin/join_pileup.py
-  filterSites: python ../../bin/filter_sites.py
+  # hisat3ntable: ~/tools/hisat2/hisat-3n-table
+  pb: ../../external/trichromat/bin/pb
+  joinPileup: python ../../external/trichromat/bin/join_pileup.py
+  filterSites: python ../../external/trichromat/bin/filter_sites.py
 
 cutoff:
   min_uncon: 1

@@ -11,6 +11,7 @@ path:
   hisat3n: ~/tools/hisat2/hisat-3n
   hisat3nbuild: ~/tools/hisat2/hisat-3n-build
   hisat3ntable: ~/tools/hisat2/hisat-3n-table
+  pb: .././bin/pb
   joinPileup: python ../../bin/join_pileup.py
   filterSites: python ../../bin/filter_sites.py
 
