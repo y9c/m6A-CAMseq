@@ -89,8 +89,14 @@ The documentation is available at [https://y9c.github.io/m6A-CAMseq/](https://y9
 ## Changelog
 
 - update in May 11, 2025
+
   - data processing steps is now based on [trichromat](https://github.com/y9c/trichromat)
   - m6A site detection and filtering is now automatically and have been combined with the pipeline
+
+- update in May 13, 2025 (v2.1)
+
+  - the m6A calling step is also based on trichromat
+  - the rate limiting step from the 3n-table has been removed
 
 &nbsp;
 
