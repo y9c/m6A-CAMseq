@@ -119,7 +119,7 @@ COPY --from=builder /build/umicollapse_build/ ${PIPELINE_HOME}/UMICollapse/
 COPY --from=builder /build/gatk_build/gatk.jar ${PIPELINE_HOME}/gatk/gatk.jar
 
 # Copy application-specific files
-COPY ./bin ${PIPELINE_HOME}/bin/
+# COPY ./bin ${PIPELINE_HOME}/bin/
 COPY ./VERSION ./Snakefile ./default.yaml ./entrypoint ${PIPELINE_HOME}/
 COPY ./external/trichromat/workflow/ ${PIPELINE_HOME}/external/trichromat/workflow/
 COPY ./external/trichromat/Snakefile ./external/trichromat/workflow_utils.py ./external/trichromat/default.yaml ./external/trichromat/config.schema.yaml ${PIPELINE_HOME}/external/trichromat/
