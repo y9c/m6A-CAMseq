@@ -36,15 +36,7 @@ READS = config["_READS"]
 
 rule all:
     input:
-        expand(
-            "report_reads/unmap/{sample}.count",
-            sample=READS.keys(),
-        ),
-        expand(
-            "report_reads/dedup/{sample}.{reftype}.count",
-            sample=READS.keys(),
-            reftype=REF.keys(),
-        ),
+        "report_reads/read_counts_summary.tsv",
         expand(
             "report_sites/filtered/{reftype}.tsv.gz",
             reftype=["genes", "genome"],
