@@ -8,6 +8,7 @@ path:
   hisat3nbuild: /pipeline/hisat2-hisat-3n/hisat-3n-build
   pb: /pipeline/bin/pb
   collectReadCounts: python ./bin/collect_read_counts.py
+  convertPileup: python ./bin/pileup_to_arrow.py
   joinPileup: /pipeline/bin/join_pileup.py
   filterSites: /pipeline/bin/filter_sites.py
 
