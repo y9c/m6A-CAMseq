@@ -22,17 +22,18 @@ jobs:
         id: get_tag
         run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
-      - name: Clean unwanted files/folders from submodules
+      - name: Clean submodule large/dev/CI files (keep .git and git config files for now)
         run: |
-          echo "Cleaning submodules..."
+          echo "Cleaning submodule large/development content (docs, tests, examples, CI configs, etc.)..."
           git submodule foreach --recursive '
-            echo "Processing submodule: $name at $path"
-
-            # --- General cleaning for ALL submodules ---
-            rm -rf docs test tests example examples examples-data test-data .git .github .gitattributes .gitignore .travis.yml .circleci.yml appveyor.yml Jenkinsfile
-            true
+            echo "Processing submodule: $name at $path (large/dev content cleaning)"
+            # Only remove bulky/unnecessary dev/example/CI files.
+            # Keep .git, .gitignore, .gitattributes for now.
+            # .github is a folder usually for workflows, can be removed if present in submodules and not needed.
+            rm -rf docs test tests example examples examples-data test-data .github .travis.yml .circleci.yml appveyor.yml Jenkinsfile
+            true # Ensures the step doesn't fail if rm finds nothing to remove in a submodule
           '
-          echo "Submodule cleaning complete."
+          echo "Submodule large/dev content cleaning complete."
 
       - name: Create package directory
         run: mkdir release_package
@@ -56,16 +57,36 @@ jobs:
           if [ -f "VERSION" ]; then cp VERSION release_package/; else echo "VERSION not found, skipping."; fi
           if [ -f "default.yaml" ]; then cp default.yaml release_package/; else echo "default.yaml not found, skipping."; fi
 
-      - name: Verify contents of package directory
+      - name: Finalize package content (remove .git, .gitmodules, etc.)
+        # This step runs *after* all desired files are copied into release_package
+        # and *before* creating the archive.
         run: |
-          echo "Listing contents of release_package before archiving:"
+          echo "Finalizing package content in release_package..."
+          if [ ! -d "release_package" ]; then
+            echo "Error: release_package directory does not exist. Check previous copy steps."
+            exit 1
+          fi
+
+          echo "Removing .git folders/files from release_package..."
+          find release_package -type d -name ".git" -print -exec rm -rf {} +
+          find release_package -type f -name ".git" -print -exec rm -f {} + # Handles submodule .git files if they are text files pointing to gitdir
+
+          echo "Removing .gitmodules files from release_package..."
+          find release_package -type f -name ".gitmodules" -print -exec rm -f {} +
+
+          echo "Removing .gitattributes files from release_package..."
+          find release_package -type f -name ".gitattributes" -print -exec rm -f {} +
+
+          echo "Removing .gitignore files from release_package..."
+          find release_package -type f -name ".gitignore" -print -exec rm -f {} +
+
+          echo "Listing contents of release_package after final cleaning:"
           ls -R release_package
           echo "--- End of package content listing ---"
 
       - name: Create archive
         run: |
           cd release_package
-          # Updated archive naming: repo_name-tag_name.tar.gz
           tar -czvf ../${{ github.event.repository.name }}-${{ env.TAG_NAME }}.tar.gz .
           # Or for a zip file:
           # zip -r ../${{ github.event.repository.name }}-${{ env.TAG_NAME }}.zip .
@@ -75,19 +96,10 @@ jobs:
       - name: Upload Release Asset (Workflow Artifact)
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}-${{ env.TAG_NAME }}_package # Consistent naming for artifact bundle if desired
-          path: ${{ github.event.repository.name }}-${{ env.TAG_NAME }}.tar.gz # Updated path
-
+          name: ${{ github.event.repository.name }}-${{ env.TAG_NAME }}_package
+          path: ${{ github.event.repository.name }}-${{ env.TAG_NAME }}.tar.gz
 
       # Optional: Create a GitHub Release and upload the asset
       # - name: Create Release
       #   uses: softprops/action-gh-release@v2
-      #   with:
-      #     files: ${{ github.event.repository.name }}-${{ env.TAG_NAME }}.tar.gz # Updated naming
-      #     tag_name: ${{ github.ref }}
-      #     name: Release ${{ github.ref_name }} # e.g., Release v1.0
-      #     body: "Release notes for ${{ github.ref_name }}"
-      #     draft: false
-      #     prerelease: false
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   # ... (configuration as before) ...
