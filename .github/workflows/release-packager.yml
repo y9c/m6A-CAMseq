@@ -27,11 +27,8 @@ jobs:
           echo "Cleaning submodule large/development content (docs, tests, examples, CI configs, etc.)..."
           git submodule foreach --recursive '
             echo "Processing submodule: $name at $path (large/dev content cleaning)"
-            # Only remove bulky/unnecessary dev/example/CI files.
-            # Keep .git, .gitignore, .gitattributes for now.
-            # .github is a folder usually for workflows, can be removed if present in submodules and not needed.
             rm -rf docs test tests example examples examples-data test-data .github .travis.yml .circleci.yml appveyor.yml Jenkinsfile
-            true # Ensures the step doesn't fail if rm finds nothing to remove in a submodule
+            true
           '
           echo "Submodule large/dev content cleaning complete."
 
