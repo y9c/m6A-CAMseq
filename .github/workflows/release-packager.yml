@@ -96,7 +96,14 @@ jobs:
           name: ${{ github.event.repository.name }}-${{ env.TAG_NAME }}_package
           path: ${{ github.event.repository.name }}-${{ env.TAG_NAME }}.tar.gz
 
-      # Optional: Create a GitHub Release and upload the asset
-      # - name: Create Release
-      #   uses: softprops/action-gh-release@v2
-      #   # ... (configuration as before) ...
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ github.event.repository.name }}-${{ env.TAG_NAME }}.tar.gz # Updated naming
+          tag_name: ${{ github.ref }}
+          name: Release ${{ github.ref_name }} # e.g., Release v1.0
+          body: 'Release notes for ${{ github.ref_name }}'
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
