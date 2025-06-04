@@ -9,7 +9,7 @@ jobs:
   build-and-pack:
     runs-on: ubuntu-latest
     permissions:
-      contents: read # Needed to checkout the repository
+      contents: write
 
     steps:
       - name: Checkout repository
