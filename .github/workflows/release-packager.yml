@@ -97,7 +97,7 @@ jobs:
           path: ${{ github.event.repository.name }}-${{ env.TAG_NAME }}.tar.gz
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.2.1
         with:
           files: ${{ github.event.repository.name }}-${{ env.TAG_NAME }}.tar.gz # Updated naming
           tag_name: ${{ github.ref }}
