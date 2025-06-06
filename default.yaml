@@ -1,16 +1,16 @@
 # build in configure for the pipeline
 path:
-  cutseq: /opt/app_venv/bin/cutseq
-  samtools: /pipeline/samtools/samtools
-  umicollapse: java -server -Xms8G -Xmx36G -Xss100M -jar /pipeline/UMICollapse/umicollapse.jar bam
-  markduplicates: java -server -Xms8G -Xmx36G -Xss100M -jar /pipeline/gatk/gatk.jar MarkDuplicates
+  cutseq: /pipeline/bin/cutseq
+  samtools: /pipeline/samtools/bin/samtools
   hisat3n: /pipeline/hisat2-hisat-3n/hisat-3n
   hisat3nbuild: /pipeline/hisat2-hisat-3n/hisat-3n-build
-  pb: /pipeline/bin/pb
-  collectReadCounts: python ./bin/collect_read_counts.py
-  convertPileup: python ./bin/pileup_to_arrow.py
-  joinPileup: /pipeline/bin/join_pileup.py
-  filterSites: /pipeline/bin/filter_sites.py
+  umicollapse: java -server -XX:InitialRAMPercentage=80.0 -XX:MaxRAMPercentage=80.0 -Djava.io.tmpdir=${SLURM_TMPDIR:-${TMPDIR:-/tmp}} -jar /pipeline/UMICollapse/umicollapse.jar bam
+  markduplicates: java -server -XX:InitialRAMPercentage=80.0 -XX:MaxRAMPercentage=80.0 -Djava.io.tmpdir=${SLURM_TMPDIR:-${TMPDIR:-/tmp}} -jar /pipeline/gatk-4.2.5.0/gatk-package-4.2.5.0-local.jar MarkDuplicates
+  pb: /pipeline/bin/pbr
+  collectReadCounts: python external/trichromat/collect_read_counts.py
+  convertPileup: python external/trichromat/pileup_to_arrow.py
+  joinPileup: python external/trichromat/bin/join_pileup.py
+  filterSites: python external/trichromat/bin/filter_sites.py
 
 # m6A method, use A to G mutation
 base_change: 'A,G'
