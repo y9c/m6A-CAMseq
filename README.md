@@ -77,10 +77,10 @@ System Requirements
 
 This package has been tested on Linux operating systems. It requires the following software dependencies:
 
-- [Python](https://www.python.org/downloads/) 3.7 or higher
+- [Python](https://www.python.org/downloads/) 3.9 or higher
 - [Snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) 8.0.0 or higher
 - [hisat2-3n](https://github.com/DaehwanKimLab/hisat2/tree/hisat-3n)
-- cutseq
+- [cutseq](https://github.com/y9c/cutseq)
 
 ## Documentation
 
