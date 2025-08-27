@@ -1,7 +1,7 @@
 # build in configure for the pipeline
 path:
-  cutseq: /pipeline/bin/cutseq
-  samtools: /pipeline/samtools/bin/samtools
+  cutseq: /opt/app_venv/bin/cutseq
+  samtools: /pipeline/samtools/samtools
   hisat3n: /pipeline/hisat2-hisat-3n/hisat-3n
   hisat3nbuild: /pipeline/hisat2-hisat-3n/hisat-3n-build
   umicollapse: java -server -XX:InitialRAMPercentage=80.0 -XX:MaxRAMPercentage=80.0 -Djava.io.tmpdir=${SLURM_TMPDIR:-${TMPDIR:-/tmp}} -jar /pipeline/UMICollapse/umicollapse.jar bam
