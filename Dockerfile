@@ -1,7 +1,7 @@
 # x86_64
 # Use ARGs for versions for easier management and clarity
 ARG SAMTOOLS_VERSION="1.21"
-ARG GATK_VERSION="4.6.2.0"
+ARG PICARD_VERSION="3.4.0"
 ARG PYTHON_VERSION_FOR_APP="3.13" # Python version for the app and base image
 # Construct the correct tag for the uv base image
 ARG UV_BASE_IMAGE_TAG="python${PYTHON_VERSION_FOR_APP}-bookworm-slim"
@@ -10,7 +10,7 @@ ARG UV_BASE_IMAGE_TAG="python${PYTHON_VERSION_FOR_APP}-bookworm-slim"
 FROM ghcr.io/astral-sh/uv:${UV_BASE_IMAGE_TAG} AS builder
 
 ARG SAMTOOLS_VERSION
-ARG GATK_VERSION
+ARG PICARD_VERSION
 ARG PYTHON_VERSION_FOR_APP # Make it available in this stage too
 # uv and Python ${PYTHON_VERSION_FOR_APP} are pre-installed in this base image.
 
@@ -55,15 +55,10 @@ RUN wget -q -P ./ https://github.com/Daniel-Liu-c0deb0t/UMICollapse/raw/refs/hea
     wget -q -P ./lib https://repo1.maven.org/maven2/com/github/samtools/htsjdk/2.19.0/htsjdk-2.19.0.jar && \
     wget -q -P ./lib https://repo1.maven.org/maven2/org/xerial/snappy/snappy-java/1.1.7.3/snappy-java-1.1.7.3.jar
 
-# --- Prepare GATK ---
-WORKDIR /build/gatk_build
-RUN wget -qO gatk_tmp.zip https://github.com/broadinstitute/gatk/releases/download/${GATK_VERSION}/gatk-${GATK_VERSION}.zip && \
-    echo "Extracting GATK JAR..." && \
-    unzip gatk_tmp.zip "gatk-${GATK_VERSION}/gatk-package-${GATK_VERSION}-local.jar" -d . && \
-    mv "gatk-${GATK_VERSION}/gatk-package-${GATK_VERSION}-local.jar" gatk.jar && \
-    rm -rf "gatk-${GATK_VERSION}" && \
-    rm gatk_tmp.zip
-
+# --- Prepare picard ---
+WORKDIR /build/picard_build
+RUN wget -qO picard.jar https://github.com/broadinstitute/picard/releases/download/${PICARD_VERSION}/picard.jar && \
+    echo "downloaded picard JAR..."
 
 # ----------- Final Stage -----------
 FROM ghcr.io/astral-sh/uv:${UV_BASE_IMAGE_TAG} AS final
@@ -79,7 +74,7 @@ ENV APP_VENV_PATH=/opt/app_venv
 ENV PATH="${APP_VENV_PATH}/bin:${PIPELINE_HOME}/bin:${PIPELINE_HOME}/samtools:${PIPELINE_HOME}/hisat2-hisat-3n:/usr/local/bin:$PATH"
 
 ENV UMICollapse_JAR_PATH="${PIPELINE_HOME}/umicollapse/umicollapse.jar"
-ENV GATK_JAR_PATH="${PIPELINE_HOME}/gatk/gatk.jar"
+ENV PICARD_JAR_PATH="${PIPELINE_HOME}/picard/picard.jar"
 
 # Install essential runtime dependencies. Python is from the base image.
 RUN apt-get update && \
@@ -92,7 +87,7 @@ RUN apt-get update && \
 RUN mkdir -p ${PIPELINE_HOME}/bin \
              ${PIPELINE_HOME}/external/trichromat \
              ${PIPELINE_HOME}/umicollapse \
-             ${PIPELINE_HOME}/gatk \
+             ${PIPELINE_HOME}/picard \
              ${PIPELINE_HOME}/samtools \
              ${PIPELINE_HOME}/hisat2-hisat-3n \
              ${APP_VENV_PATH} \
@@ -114,9 +109,9 @@ COPY --from=builder /build/hisat2_build/hisat2-build-s ${PIPELINE_HOME}/hisat2-h
 COPY --from=builder /build/hisat2_build/hisat2-build-l ${PIPELINE_HOME}/hisat2-hisat-3n/hisat2-build-l
 COPY --from=builder /build/hisat2_build/hisat-3n-table ${PIPELINE_HOME}/hisat2-hisat-3n/hisat-3n-table
 
-# Copy UMICollapse and GATK
+# Copy UMICollapse and picard
 COPY --from=builder /build/umicollapse_build/ ${PIPELINE_HOME}/UMICollapse/
-COPY --from=builder /build/gatk_build/gatk.jar ${PIPELINE_HOME}/gatk/gatk.jar
+COPY --from=builder /build/picard_build/picard.jar ${PIPELINE_HOME}/picard/picard.jar
 
 # Copy application-specific files
 # COPY ./bin ${PIPELINE_HOME}/bin/
