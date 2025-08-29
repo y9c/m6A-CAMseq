@@ -128,8 +128,7 @@ COPY --from=builder /build/pbr_build/pbr ${PIPELINE_HOME}/pbr/pbr
 COPY ./VERSION ./Snakefile ./default.yaml ./entrypoint ${PIPELINE_HOME}/
 COPY ./external/trichromat/workflow/ ${PIPELINE_HOME}/external/trichromat/workflow/
 COPY ./external/trichromat/Snakefile ./external/trichromat/workflow_utils.py ./external/trichromat/default.yaml ./external/trichromat/config.schema.yaml ${PIPELINE_HOME}/external/trichromat/
-COPY ./external/trichromat/bin/ ${PIPELINE_HOME}/bin/
-
+COPY ./external/trichromat/bin/ ${PIPELINE_HOME}/script/
 
 WORKDIR /workspace
 
