@@ -60,6 +60,13 @@ WORKDIR /build/picard_build
 RUN wget -qO picard.jar https://github.com/broadinstitute/picard/releases/download/${PICARD_VERSION}/picard.jar && \
     echo "downloaded picard JAR..."
 
+# -- Download and prepare pbr --
+WORKDIR /build/pbr_build
+RUN wget https://github.com/y9c/pbr/releases/download/latest-prerelease/pbr-x86_64-unknown-linux-musl.tar.gz && \
+    tar zxvf pbr-x86_64-unknown-linux-musl.tar.gz && \
+    chmod +x pbr && \
+    rm pbr-x86_64-unknown-linux-musl.tar.gz
+
 # ----------- Final Stage -----------
 FROM ghcr.io/astral-sh/uv:${UV_BASE_IMAGE_TAG} AS final
 # This image already has Python ${PYTHON_VERSION_FOR_APP} and uv.
@@ -113,6 +120,9 @@ COPY --from=builder /build/hisat2_build/hisat-3n-table ${PIPELINE_HOME}/hisat2-h
 COPY --from=builder /build/umicollapse_build/ ${PIPELINE_HOME}/UMICollapse/
 COPY --from=builder /build/picard_build/picard.jar ${PIPELINE_HOME}/picard/picard.jar
 
+# Copy pbr (downloaded binary)
+COPY --from=builder /build/pbr_build/pbr ${PIPELINE_HOME}/pbr/pbr
+
 # Copy application-specific files
 # COPY ./bin ${PIPELINE_HOME}/bin/
 COPY ./VERSION ./Snakefile ./default.yaml ./entrypoint ${PIPELINE_HOME}/
@@ -127,6 +137,7 @@ WORKDIR /workspace
 RUN chmod +x ${PIPELINE_HOME}/entrypoint && \
     find ${PIPELINE_HOME}/bin/ -type f -exec chmod +x {} \; && \
     chmod +x ${PIPELINE_HOME}/samtools/samtools && \
+    chmod +x ${PIPELINE_HOME}/pbr/pbr && \
     find ${PIPELINE_HOME}/hisat2-hisat-3n/ -maxdepth 1 -type f -exec chmod +x {} \; -o -type l -exec chmod +x {} \;
 
 ENTRYPOINT ["/pipeline/entrypoint"]

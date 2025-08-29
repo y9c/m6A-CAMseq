@@ -6,7 +6,7 @@ path:
   hisat3nbuild: /pipeline/hisat2-hisat-3n/hisat-3n-build
   umicollapse: java -server -XX:InitialRAMPercentage=80.0 -XX:MaxRAMPercentage=80.0 -Djava.io.tmpdir=${SLURM_TMPDIR:-${TMPDIR:-/tmp}} -jar /pipeline/UMICollapse/umicollapse.jar bam
   picard: java -server -XX:InitialRAMPercentage=80.0 -XX:MaxRAMPercentage=80.0 -Djava.io.tmpdir=${SLURM_TMPDIR:-${TMPDIR:-/tmp}} -jar /pipeline/picard/picard.jar
-  pb: /pipeline/bin/pbr
+  pb: /pipeline/pbr/pbr
   collectReadCounts: python external/trichromat/collect_read_counts.py
   convertPileup: python external/trichromat/pileup_to_arrow.py
   joinPileup: python external/trichromat/bin/join_pileup.py
