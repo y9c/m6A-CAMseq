@@ -42,15 +42,16 @@ jobs:
         with:
           context: .
           push: true
-          # The image will be tagged with the unique commit SHA, e.g., ghcr.io/your-org/your-repo:a1b2c3d
           tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.VERSION }}
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.version=${{ steps.get_version.outputs.VERSION }}
 
-      # 6. Install Apptainer
+      # 6. Install a specific version of Apptainer
       - name: Install Apptainer
-        uses: apptainer/setup-apptainer@main
+        uses: eWaterCycle/setup-apptainer@v2
+        with:
+          apptainer-version: 1.3.6 # Pinning the version for reproducibility
 
       # 7. Build the SIF container from the newly pushed Docker image
       - name: Build SIF from Docker image
@@ -68,20 +69,16 @@ jobs:
       - name: Create or Update Nightly Pre-Release
         uses: softprops/action-gh-release@v2
         with:
-          # This will find the release associated with the 'nightly' tag, create it if it doesn't exist,
-          # and update it on every subsequent run.
-          tag_name: "nightly-build"
-          name: "Nightly Build"
+          tag_name: 'nightly-build'
+          name: 'Nightly Build'
           body: |
             This pre-release contains the latest development build from the `main` branch.
-            
+
             **Last Updated:** $(date -u)
             **Commit:** `${{ github.sha }}`
-            
+
             **Container Images:**
             - **SIF:** `${{ env.SIF_FILE_PATH }}` (attached below)
             - **Docker:** `ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.VERSION }}`
           prerelease: true
-          # The 'files' option will overwrite any existing assets with the same name,
-          # ensuring the release always points to the latest SIF file.
           files: ${{ env.SIF_FILE_PATH }}
