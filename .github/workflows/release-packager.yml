@@ -1,109 +1,87 @@
-name: Create Release Package
+# This workflow builds and releases a SIF container on every push to the main branch.
+name: Build and Release SIF Container (Nightly)
 
 on:
   push:
-    tags:
-      - 'v*' # Trigger on tags starting with 'v', e.g., v1.0, v2.0.1
+    branches:
+      - 'main' # Trigger on every push to the 'main' branch
 
 jobs:
-  build-and-pack:
+  build-and-release:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # Required to create/update releases
+      packages: write # Required to push to GitHub Container Registry
 
     steps:
+      # 1. Get the source code
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      # 2. Get the short commit SHA to use as the version for our artifacts
+      - name: Get commit SHA for versioning
+        id: get_version
+        run: echo "VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      # 3. Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 4. Log in to the GitHub Container Registry (GHCR)
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
-          fetch-depth: 1 # Shallow clone (depth 1) for main repo and submodules
-          submodules: 'recursive' # Initialize and update submodules recursively
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get tag name
-        id: get_tag
-        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-
-      - name: Clean submodule large/dev/CI files (keep .git and git config files for now)
-        run: |
-          echo "Cleaning submodule large/development content (docs, tests, examples, CI configs, etc.)..."
-          git submodule foreach --recursive '
-            echo "Processing submodule: $name at $path (large/dev content cleaning)"
-            rm -rf docs test tests example examples examples-data test-data .github .travis.yml .circleci.yml appveyor.yml Jenkinsfile
-            true
-          '
-          echo "Submodule large/dev content cleaning complete."
-
-      - name: Create package directory
-        run: mkdir release_package
-
-      - name: Copy specified project folder to package
-        run: |
-          echo "Copying specified project folder(s)..."
-          if [ -d "external" ]; then
-            echo "Copying external/..."
-            cp -r external release_package/
-          else
-            echo "external/ folder not found, skipping."
-          fi
-
-      - name: Copy specified root files to package
-        run: |
-          echo "Copying specified root files..."
-          if [ -f "Dockerfile" ]; then cp Dockerfile release_package/; else echo "Dockerfile not found, skipping."; fi
-          if [ -f "LICENSE" ]; then cp LICENSE release_package/; else echo "LICENSE not found, skipping."; fi
-          if [ -f "Snakefile" ]; then cp Snakefile release_package/; else echo "Snakefile not found, skipping."; fi
-          if [ -f "VERSION" ]; then cp VERSION release_package/; else echo "VERSION not found, skipping."; fi
-          if [ -f "default.yaml" ]; then cp default.yaml release_package/; else echo "default.yaml not found, skipping."; fi
-
-      - name: Finalize package content (remove .git, .gitmodules, etc.)
-        # This step runs *after* all desired files are copied into release_package
-        # and *before* creating the archive.
-        run: |
-          echo "Finalizing package content in release_package..."
-          if [ ! -d "release_package" ]; then
-            echo "Error: release_package directory does not exist. Check previous copy steps."
-            exit 1
-          fi
-
-          echo "Removing .git folders/files from release_package..."
-          find release_package -type d -name ".git" -print -exec rm -rf {} +
-          find release_package -type f -name ".git" -print -exec rm -f {} + # Handles submodule .git files if they are text files pointing to gitdir
-
-          echo "Removing .gitmodules files from release_package..."
-          find release_package -type f -name ".gitmodules" -print -exec rm -f {} +
-
-          echo "Removing .gitattributes files from release_package..."
-          find release_package -type f -name ".gitattributes" -print -exec rm -f {} +
-
-          echo "Removing .gitignore files from release_package..."
-          find release_package -type f -name ".gitignore" -print -exec rm -f {} +
-
-          echo "Listing contents of release_package after final cleaning:"
-          ls -R release_package
-          echo "--- End of package content listing ---"
-
-      - name: Create archive
-        run: |
-          cd release_package
-          tar -czvf ../${{ github.event.repository.name }}-${{ env.TAG_NAME }}.tar.gz .
-          # Or for a zip file:
-          # zip -r ../${{ github.event.repository.name }}-${{ env.TAG_NAME }}.zip .
-          cd ..
-        id: archive_details
-
-      - name: Upload Release Asset (Workflow Artifact)
-        uses: actions/upload-artifact@v4
+      # 5. Build and push the Docker image to GHCR, tagged with the commit SHA
+      - name: Build and push Docker image
+        id: build_and_push_docker
+        uses: docker/build-push-action@v5
         with:
-          name: ${{ github.event.repository.name }}-${{ env.TAG_NAME }}_package
-          path: ${{ github.event.repository.name }}-${{ env.TAG_NAME }}.tar.gz
+          context: .
+          push: true
+          # The image will be tagged with the unique commit SHA, e.g., ghcr.io/your-org/your-repo:a1b2c3d
+          tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.VERSION }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.version=${{ steps.get_version.outputs.VERSION }}
 
-      - name: Create Release
+      # 6. Install Apptainer
+      - name: Install Apptainer
+        uses: apptainer/setup-apptainer@main
+
+      # 7. Build the SIF container from the newly pushed Docker image
+      - name: Build SIF from Docker image
+        env:
+          APPTAINER_DOCKER_USERNAME: ${{ github.actor }}
+          APPTAINER_DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          SIF_FILENAME: ${{ github.event.repository.name }}_${{ steps.get_version.outputs.VERSION }}.sif
+          DOCKER_IMAGE_URI: docker://ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.VERSION }}
+        run: |
+          echo "Building SIF file: $SIF_FILENAME"
+          apptainer build "$SIF_FILENAME" "$DOCKER_IMAGE_URI"
+          echo "SIF_FILE_PATH=$SIF_FILENAME" >> $GITHUB_ENV
+
+      # 8. Create or update a "Nightly Build" pre-release and upload the new SIF file
+      - name: Create or Update Nightly Pre-Release
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{ github.event.repository.name }}-${{ env.TAG_NAME }}.tar.gz # Updated naming
-          tag_name: ${{ github.ref }}
-          name: Release ${{ github.ref_name }} # e.g., Release v1.0
-          body: 'Release notes for ${{ github.ref_name }}'
-          draft: false
+          # This will find the release associated with the 'nightly' tag, create it if it doesn't exist,
+          # and update it on every subsequent run.
+          tag_name: "nightly-build"
+          name: "Nightly Build"
+          body: |
+            This pre-release contains the latest development build from the `main` branch.
+            
+            **Last Updated:** $(date -u)
+            **Commit:** `${{ github.sha }}`
+            
+            **Container Images:**
+            - **SIF:** `${{ env.SIF_FILE_PATH }}` (attached below)
+            - **Docker:** `ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.VERSION }}`
           prerelease: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # The 'files' option will overwrite any existing assets with the same name,
+          # ensuring the release always points to the latest SIF file.
+          files: ${{ env.SIF_FILE_PATH }}
