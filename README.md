@@ -88,6 +88,10 @@ The documentation is available at [https://y9c.github.io/m6A-CAMseq/](https://y9
 
 ## Changelog
 
+- update in Aug, 29, 2025
+
+  - auto build SIF
+
 - update in May 11, 2025
 
   - data processing steps is now based on [trichromat](https://github.com/y9c/trichromat)
