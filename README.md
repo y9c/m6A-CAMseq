@@ -63,6 +63,13 @@ apptainer run docker://y9ch/camseq -c data.yaml -j 48
 > apptainer build camseq.sif docker://y9ch/camseq:v2
 > apptainer run camseq.sif -c data.yaml -j 48
 > ```
+>
+> Or you can download the SIF file directly for running
+>
+> ```bash
+> wget https://github.com/y9c/m6A-CAMseq/releases/download/nightly-build/camseq.sif
+> apptainer run camseq.sif -c data.yaml -j 48
+> ```
 
 > [!TIP]
 > For using the previous version of pipeline (v1), try:
