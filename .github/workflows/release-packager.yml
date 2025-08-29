@@ -14,9 +14,11 @@ jobs:
       packages: write # Required to push to GitHub Container Registry
 
     steps:
-      # 1. Get the source code
+      # 1. Get the source code and initialize submodules
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
 
       # 2. Get the short commit SHA to use as the version for our artifacts
       - name: Get commit SHA for versioning
@@ -43,7 +45,7 @@ jobs:
           context: .
           push: true
           # Enforce the image name 'camseq' under the repository owner's namespace
-          tags: ghcr.io/${{ github.repository_owner }}/camseq:${{ steps.get_version.outputs.VERSION }} # <-- CHANGED
+          tags: ghcr.io/${{ github.repository_owner }}/camseq:${{ steps.get_version.outputs.VERSION }}
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.version=${{ steps.get_version.outputs.VERSION }}
@@ -61,7 +63,7 @@ jobs:
           APPTAINER_DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           SIF_FILENAME: camseq.sif
           # Use the enforced image name 'camseq'
-          DOCKER_IMAGE_URI: docker://ghcr.io/${{ github.repository_owner }}/camseq:${{ steps.get_version.outputs.VERSION }} # <-- CHANGED
+          DOCKER_IMAGE_URI: docker://ghcr.io/${{ github.repository_owner }}/camseq:${{ steps.get_version.outputs.VERSION }}
         run: |
           echo "Building SIF file: $SIF_FILENAME"
           apptainer build "$SIF_FILENAME" "$DOCKER_IMAGE_URI"
