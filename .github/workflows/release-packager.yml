@@ -42,8 +42,8 @@ jobs:
         with:
           context: .
           push: true
-          # Use format() function for a robust way to force lowercase
-          tags: ghcr.io/${{ format('{0,,}', github.repository) }}:${{ steps.get_version.outputs.VERSION }} # <-- CORRECTED
+          # Enforce the image name 'camseq' under the repository owner's namespace
+          tags: ghcr.io/${{ github.repository_owner }}/camseq:${{ steps.get_version.outputs.VERSION }} # <-- CHANGED
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.version=${{ steps.get_version.outputs.VERSION }}
@@ -60,8 +60,8 @@ jobs:
           APPTAINER_DOCKER_USERNAME: ${{ github.actor }}
           APPTAINER_DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           SIF_FILENAME: camseq.sif
-          # Use format() function for a robust way to force lowercase
-          DOCKER_IMAGE_URI: docker://ghcr.io/${{ format('{0,,}', github.repository) }}:${{ steps.get_version.outputs.VERSION }} # <-- CORRECTED
+          # Use the enforced image name 'camseq'
+          DOCKER_IMAGE_URI: docker://ghcr.io/${{ github.repository_owner }}/camseq:${{ steps.get_version.outputs.VERSION }} # <-- CHANGED
         run: |
           echo "Building SIF file: $SIF_FILENAME"
           apptainer build "$SIF_FILENAME" "$DOCKER_IMAGE_URI"
@@ -81,6 +81,6 @@ jobs:
 
             **Container Images:**
             - **SIF:** `${{ env.SIF_FILE_PATH }}` (attached below)
-            - **Docker:** `ghcr.io/${{ format('{0,,}', github.repository) }}:${{ steps.get_version.outputs.VERSION }}`
+            - **Docker:** `ghcr.io/${{ github.repository_owner }}/camseq:${{ steps.get_version.outputs.VERSION }}`
           prerelease: true
           files: ${{ env.SIF_FILE_PATH }}
