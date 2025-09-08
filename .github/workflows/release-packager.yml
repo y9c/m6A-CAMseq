@@ -20,7 +20,7 @@ jobs:
         with:
           submodules: 'recursive'
 
-      # 2. Get the short commit SHA to use as the version for our artifacts
+      # 2. Get the short commit SHA to use as a label for traceability
       - name: Get commit SHA for versioning
         id: get_version
         run: echo "VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
@@ -37,18 +37,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # 5. Build and push the Docker image to GHCR, tagged with the commit SHA
+      # 5. Build and push the Docker image to GHCR, tagged only as 'latest'
       - name: Build and push Docker image
         id: build_and_push_docker
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          # Enforce the image name 'camseq' under the repository owner's namespace
-          tags: ghcr.io/${{ github.repository_owner }}/camseq:${{ steps.get_version.outputs.VERSION }}
-          labels: |
-            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
-            org.opencontainers.image.version=${{ steps.get_version.outputs.VERSION }}
+          tags: ghcr.io/${{ github.repository_owner }}/camseq:latest
+          # We are now only keeping the version label for traceability.
+          labels: org.opencontainers.image.version=${{ steps.get_version.outputs.VERSION }}
 
       # 6. Install a specific version of Apptainer
       - name: Install Apptainer
@@ -56,14 +54,13 @@ jobs:
         with:
           apptainer-version: 1.3.6
 
-      # 7. Build the SIF container from the newly pushed Docker image
+      # 7. Build the SIF container from the 'latest' Docker image
       - name: Build SIF from Docker image
         env:
           APPTAINER_DOCKER_USERNAME: ${{ github.actor }}
           APPTAINER_DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           SIF_FILENAME: camseq.sif
-          # Use the enforced image name 'camseq'
-          DOCKER_IMAGE_URI: docker://ghcr.io/${{ github.repository_owner }}/camseq:${{ steps.get_version.outputs.VERSION }}
+          DOCKER_IMAGE_URI: docker://ghcr.io/${{ github.repository_owner }}/camseq:latest
         run: |
           echo "Building SIF file: $SIF_FILENAME"
           apptainer build "$SIF_FILENAME" "$DOCKER_IMAGE_URI"
@@ -83,6 +80,6 @@ jobs:
 
             **Container Images:**
             - **SIF:** `${{ env.SIF_FILE_PATH }}` (attached below)
-            - **Docker:** `ghcr.io/${{ github.repository_owner }}/camseq:${{ steps.get_version.outputs.VERSION }}`
+            - **Docker:** `ghcr.io/${{ github.repository_owner }}/camseq:latest`
           prerelease: true
           files: ${{ env.SIF_FILE_PATH }}
