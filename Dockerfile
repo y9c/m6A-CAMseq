@@ -33,7 +33,7 @@ ENV APP_VENV_PATH=/opt/app_venv
 RUN python${PYTHON_VERSION_FOR_APP} -m venv ${APP_VENV_PATH}
 
 # Install Python packages (libraries and tools) into this venv using the global uv
-ENV PYTHON_PACKAGES="scipy polars cutseq snakemake"
+ENV PYTHON_PACKAGES="scipy polars cutseq snakemake==9.9.0"
 RUN echo "Installing Python packages: ${PYTHON_PACKAGES} into ${APP_VENV_PATH}" && \
     uv pip install --python ${APP_VENV_PATH}/bin/python --no-cache ${PYTHON_PACKAGES}
 
