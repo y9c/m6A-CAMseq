@@ -4,8 +4,8 @@ path:
   samtools: /pipeline/samtools/samtools
   hisat3n: /pipeline/hisat2-hisat-3n/hisat-3n
   hisat3nbuild: /pipeline/hisat2-hisat-3n/hisat-3n-build
-  umicollapse: java -server -XX:InitialRAMPercentage=80.0 -XX:MaxRAMPercentage=80.0 -Djava.io.tmpdir=${SLURM_TMPDIR:-${TMPDIR:-/tmp}} -jar /pipeline/UMICollapse/umicollapse.jar bam
-  picard: java -server -XX:InitialRAMPercentage=80.0 -XX:MaxRAMPercentage=80.0 -Djava.io.tmpdir=${SLURM_TMPDIR:-${TMPDIR:-/tmp}} -jar /pipeline/picard/picard.jar
+  umicollapse: java -server -Xss8m -Xms160G -Xmx160G -XX:InitialRAMPercentage=80.0 -XX:MaxRAMPercentage=80.0 -Djava.io.tmpdir=${SLURM_TMPDIR:-${TMPDIR:-/tmp}} -jar /pipeline/UMICollapse/umicollapse.jar bam
+  picard: java -server -Xss1m -Xms160G -Xmx160G -XX:InitialRAMPercentage=80.0 -XX:MaxRAMPercentage=80.0 -Djava.io.tmpdir=${SLURM_TMPDIR:-${TMPDIR:-/tmp}} -jar /pipeline/picard/picard.jar
   pb: /pipeline/pbr/pbr
   collectReadCounts: python /pipeline/script/collect_read_counts.py
   convertPileup: python /pipeline/script/pileup_to_arrow.py
