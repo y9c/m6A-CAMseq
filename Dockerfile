@@ -50,10 +50,13 @@ RUN wget -qO- https://github.com/DaehwanKimLab/hisat2/archive/refs/heads/hisat-3
 
 # --- Prepare UMICollapse ---
 WORKDIR /build/umicollapse_build
-RUN wget -q -P ./ https://github.com/Daniel-Liu-c0deb0t/UMICollapse/raw/refs/heads/master/umicollapse.jar && \
-    mkdir lib && \
-    wget -q -P ./lib https://repo1.maven.org/maven2/com/github/samtools/htsjdk/2.19.0/htsjdk-2.19.0.jar && \
-    wget -q -P ./lib https://repo1.maven.org/maven2/org/xerial/snappy/snappy-java/1.1.7.3/snappy-java-1.1.7.3.jar
+# RUN wget -q -P ./ https://github.com/Daniel-Liu-c0deb0t/UMICollapse/raw/refs/heads/master/umicollapse.jar && \
+#     mkdir lib && \
+#     wget -q -P ./lib https://repo1.maven.org/maven2/com/github/samtools/htsjdk/2.19.0/htsjdk-2.19.0.jar && \
+#     wget -q -P ./lib https://repo1.maven.org/maven2/org/xerial/snappy/snappy-java/1.1.7.3/snappy-java-1.1.7.3.jar
+RUN wget -q -P ./ https://github.com/y9c/UMICollapse/releases/download/latest-prerelease/umicollapse-release.zip && \
+    unzip umicollapse-release.zip && \
+    rm umicollapse-release.zip
 
 # --- Prepare picard ---
 WORKDIR /build/picard_build
