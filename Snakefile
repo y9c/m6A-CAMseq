@@ -5,9 +5,9 @@ from external.trichromat.workflow_utils import preprocess_config
 configfile: "default.yaml"
 
 
-WORKDIR = os.path.relpath(
-    config.get("workdir", "workspace"), os.path.dirname(workflow.configfiles[-1])
-)
+_workdir = config.get("workdir", "workspace")
+_config_dir = os.path.dirname(os.path.abspath(workflow.configfiles[-1]))
+WORKDIR = _workdir if os.path.isabs(_workdir) else os.path.join(_config_dir, _workdir)
 TEMPDIR = Path(
     os.path.relpath(
         config.get("tempdir", os.path.join(workflow.basedir, ".tmp")), workflow.basedir
