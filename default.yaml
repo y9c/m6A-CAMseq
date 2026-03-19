@@ -16,15 +16,15 @@ path:
 base_change: 'A,G'
 
 # can be "ECLIP10", "ECLIP6", "TAKARAV3", "SACSEQV3", "STRANDED"
-libtype: ECLIP6
+# libtype: ECLIP6
 # with umi in the library or not
-with_umi: true
+# with_umi: true
 # by default, the pipeline will force remove the PCR duplicates based on the UMI
 # if UMI is not available, you can toggle the markdup to `false` to skip the PCR duplicate removal
-markdup: true
+# markdup: true
 # by default, the pipeline will use the strandness information from the library
 # if the strandness is not available, set the strandness to `false`
-strandness: true
+# strandness: true
 
 ## run the analysis
 workdir: workspace
