@@ -4,6 +4,7 @@ path:
   samtools: /pipeline/samtools/samtools
   hisat3n: /pipeline/hisat2-hisat-3n/hisat-3n
   hisat3nbuild: /pipeline/hisat2-hisat-3n/hisat-3n-build
+  hisat3ntable: /pipeline/hisat2-hisat-3n/hisat-3n-table
   umicollapse: java -server -Xss1m -Xms160G -Xmx160G -XX:InitialRAMPercentage=80.0 -XX:MaxRAMPercentage=80.0 -Djava.io.tmpdir=.tmp -jar /pipeline/UMICollapse/umicollapse.jar bam
   picard: java -server -Xss1m -Xms160G -Xmx160G -XX:InitialRAMPercentage=80.0 -XX:MaxRAMPercentage=80.0 -Djava.io.tmpdir=.tmp -jar /pipeline/picard/picard.jar
   pb: /pipeline/pbr/pbr
