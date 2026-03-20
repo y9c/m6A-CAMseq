@@ -47,7 +47,8 @@ RUN wget -qO- https://github.com/samtools/samtools/releases/download/${SAMTOOLS_
 WORKDIR /build/hisat2_build
 RUN git clone --depth 1 https://github.com/y9c/HISAT-3N-bighaohao.git . && \
     cmake . && \
-    make -j$(nproc)
+    make -j$(nproc) && \
+    make symlinks_target && sleep 1
 
 # --- Prepare UMICollapse ---
 WORKDIR /build/umicollapse_build
