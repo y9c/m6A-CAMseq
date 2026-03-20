@@ -20,7 +20,7 @@ ENV TZ=Etc/UTC
 # Install build-time dependencies for system tools.
 RUN apt-get update && \
     apt-get -y --no-install-recommends install \
-    ca-certificates tzdata apt-utils wget curl bzip2 unzip make gcc g++ pkg-config xsltproc \
+    ca-certificates tzdata apt-utils wget curl bzip2 unzip make cmake gcc g++ pkg-config xsltproc \
     zlib1g-dev libxml2-dev \
     gfortran libopenblas-dev liblapack-dev \
     default-jre coreutils procps libjemalloc-dev && \
@@ -45,7 +45,8 @@ RUN wget -qO- https://github.com/samtools/samtools/releases/download/${SAMTOOLS_
 
 # --- Build improved HISAT-3N ---
 WORKDIR /build/hisat2_build
-RUN git clone --depth 1 https://github.com/BruoYe-Nountum/HISAT-3N.git . && \
+RUN git clone --depth 1 https://github.com/y9c/HISAT-3N-bighaohao.git . && \
+    cmake . && \
     make -j$(nproc)
 
 # --- Prepare UMICollapse ---
