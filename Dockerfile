@@ -23,7 +23,7 @@ RUN apt-get update && \
     ca-certificates tzdata apt-utils wget curl bzip2 unzip make gcc g++ pkg-config xsltproc \
     zlib1g-dev libxml2-dev \
     gfortran libopenblas-dev liblapack-dev \
-    default-jre coreutils procps && \
+    default-jre coreutils procps libjemalloc-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -43,10 +43,10 @@ RUN wget -qO- https://github.com/samtools/samtools/releases/download/${SAMTOOLS_
     ./configure --without-curses --disable-bz2 --disable-lzma && \
     make -j$(nproc) samtools
 
-# --- Build hisat2 (from hisat-3n branch) ---
+# --- Build improved HISAT-3N ---
 WORKDIR /build/hisat2_build
-RUN wget -qO- https://github.com/DaehwanKimLab/hisat2/archive/refs/heads/hisat-3n.tar.gz | tar -xzf - --strip-components=1 && \
-    make -j$(nproc) # This builds hisat2, hisat2-build, hisat2-build-s, hisat2-build-l, etc.
+RUN git clone --depth 1 https://github.com/BruoYe-Nountum/HISAT-3N.git . && \
+    make -j$(nproc)
 
 # --- Prepare UMICollapse ---
 WORKDIR /build/umicollapse_build
@@ -62,13 +62,6 @@ RUN wget -q -P ./ https://github.com/y9c/UMICollapse/releases/download/latest-pr
 WORKDIR /build/picard_build
 RUN wget -qO picard.jar https://github.com/broadinstitute/picard/releases/download/${PICARD_VERSION}/picard.jar && \
     echo "downloaded picard JAR..."
-
-# -- Download and prepare pbr --
-WORKDIR /build/pbr_build
-RUN wget https://github.com/y9c/pbr/releases/download/latest-prerelease/pbr-x86_64-unknown-linux-musl.tar.gz && \
-    tar zxvf pbr-x86_64-unknown-linux-musl.tar.gz && \
-    chmod +x pbr && \
-    rm pbr-x86_64-unknown-linux-musl.tar.gz
 
 # ----------- Final Stage -----------
 FROM ghcr.io/astral-sh/uv:${UV_BASE_IMAGE_TAG} AS final
@@ -89,7 +82,7 @@ ENV PICARD_JAR_PATH="${PIPELINE_HOME}/picard/picard.jar"
 # Install essential runtime dependencies. Python is from the base image.
 RUN apt-get update && \
     apt-get -y --no-install-recommends install \
-    ca-certificates tzdata default-jre zlib1g libxml2 && \
+    ca-certificates tzdata default-jre zlib1g libxml2 libjemalloc2 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -123,9 +116,6 @@ COPY --from=builder /build/hisat2_build/hisat-3n-table ${PIPELINE_HOME}/hisat2-h
 COPY --from=builder /build/umicollapse_build/ ${PIPELINE_HOME}/UMICollapse/
 COPY --from=builder /build/picard_build/picard.jar ${PIPELINE_HOME}/picard/picard.jar
 
-# Copy pbr (downloaded binary)
-COPY --from=builder /build/pbr_build/pbr ${PIPELINE_HOME}/pbr/pbr
-
 # Copy application-specific files
 # COPY ./bin ${PIPELINE_HOME}/bin/
 COPY ./VERSION ./Snakefile ./default.yaml ./entrypoint ${PIPELINE_HOME}/
@@ -139,7 +129,6 @@ WORKDIR /workspace
 RUN chmod +x ${PIPELINE_HOME}/entrypoint && \
     find ${PIPELINE_HOME}/bin/ -type f -exec chmod +x {} \; && \
     chmod +x ${PIPELINE_HOME}/samtools/samtools && \
-    chmod +x ${PIPELINE_HOME}/pbr/pbr && \
     find ${PIPELINE_HOME}/hisat2-hisat-3n/ -maxdepth 1 -type f -exec chmod +x {} \; -o -type l -exec chmod +x {} \;
 
 ENTRYPOINT ["/pipeline/entrypoint"]
