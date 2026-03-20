@@ -3,7 +3,7 @@
 
 # You can specify the base image tag to use
 ARG BASE_IMAGE_TAG=latest
-FROM y9c/trichromat:${BASE_IMAGE_TAG}
+FROM ghcr.io/y9c/trichromat:${BASE_IMAGE_TAG}
 
 # The base image already contains:
 # - A /pipeline directory with samtools, hisat-3n, etc.
