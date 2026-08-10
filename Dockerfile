@@ -1,8 +1,13 @@
 # m6A-CAMseq final image
 # Builds on top of the trichromat base image
 
-# You can specify the base image tag to use
-ARG BASE_IMAGE_TAG=latest
+# Pin the base image to the immutable commit-specific tag (NOT the mutable
+# `latest` tag). The trichromat release pipeline pushes both `latest` and a
+# commit-SHA tag. Pinning to the commit SHA makes builds deterministic and
+# prevents a race where a concurrent base-image rebuild makes `latest` resolve
+# to a stale image (which caused the old fork-based hisat-3n binaries to leak
+# into the SIF).
+ARG BASE_IMAGE_TAG=a1ca1748c6822508529e602fcf3368391c40c2c4
 FROM ghcr.io/y9c/trichromat:${BASE_IMAGE_TAG}
 
 # The base image already contains:
