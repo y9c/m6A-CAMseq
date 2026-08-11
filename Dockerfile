@@ -7,7 +7,7 @@
 # prevents a race where a concurrent base-image rebuild makes `latest` resolve
 # to a stale image (which caused the old fork-based hisat-3n binaries to leak
 # into the SIF).
-ARG BASE_IMAGE_TAG=a1ca1748c6822508529e602fcf3368391c40c2c4
+ARG BASE_IMAGE_TAG=2a9ab6063f093ad09abaf1c218943736cd915c73
 FROM ghcr.io/y9c/trichromat:${BASE_IMAGE_TAG}
 
 # The base image already contains:
