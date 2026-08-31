@@ -1,0 +1,141 @@
+# config.schema.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+description: 'Schema for validating the project-specific Snakemake configuration YAML file.'
+type: object
+
+properties:
+  cores:
+    type: integer
+    description: 'Number of CPU cores the pipeline is allowed to use.'
+    minimum: 1
+  libtype:
+    type: string
+    description: 'The library preparation type.'
+  adapter:
+    type: string
+    description: 'The adapter sequence to be trimmed.'
+  base_change:
+    type: string
+    description: "Specifies base changes of interest, e.g., 'A,G'. Important for specific variant-aware analyses or RNA editing studies."
+    pattern: '^[ACGTN],[ACGTN]$'
+  markdup:
+    type: boolean
+    description: 'If true, PCR duplicates will be marked (and typically removed or ignored in downstream steps). Set to false if UMI is not available or if this step needs to be skipped.'
+  strandness:
+    type: boolean
+    description: 'If true, indicates that the sequencing library is strand-specific. This information is crucial for correct transcript quantification and analysis.'
+  gene_norc:
+    type: boolean
+    description: 'If true, applies specific logic for gene counting, potentially related to excluding ribosomal contamination or handling non-coding RNA features.'
+  splice_genome:
+    type: boolean
+    description: 'If true, the genome alignment step will be configured to be splice-aware, necessary for RNA-seq data.'
+
+  path:
+    type: object
+    description: 'Specifies paths to various bioinformatics tools required by the pipeline.'
+    properties:
+      cutseq:
+        type: string
+        description: "Path to the 'cutseq' executable."
+      samtools:
+        type: string
+        description: "Path to the 'samtools' executable."
+      hisat3n:
+        type: string
+        description: "Path to the 'hisat-3n' aligner executable."
+      hisat3nbuild:
+        type: string
+        description: "Path to the 'hisat-3n-build' index builder executable."
+    required:
+      - cutseq
+      - samtools
+      - hisat3n
+      - hisat3nbuild
+    # Set 'additionalProperties: false' if no other keys than those listed above are allowed in 'path'.
+    # 'true' allows for other, non-validated paths (like your commented-out examples).
+    additionalProperties: true
+  genome_index:
+    type: string
+    description: 'Path to the pre-built HISAT2/3n genome index prefix (e.g., /path/to/index/GRCh38.release110, without the .htX extensions).'
+  reference:
+    type: object
+    description: 'Contains paths to various reference sequence files.'
+    properties:
+      contamination:
+        type: array
+        description: 'A list of FASTA files containing sequences to be considered as contaminants (e.g., adapters, common lab contaminants).'
+        items:
+          type: string
+        minItems: 1 # Expect at least one contamination file if the 'contamination' key is present.
+      genes:
+        type: array
+        description: 'A list of FASTA files containing gene annotations or other reference sequences like spike-ins or ribosomal RNA sequences.'
+        items:
+          type: string
+        minItems: 1 # Expect at least one gene reference file if the 'genes' key is present.
+    required:
+      - genes
+      - genome
+  samples:
+    type: object
+    description: "Defines the input samples and their associated sequencing data files. Each key under 'samples' is a unique sample identifier."
+    # 'additionalProperties' allows for arbitrary sample names as keys.
+    # Each of these sample entries must conform to the schema defined below.
+    additionalProperties:
+      type: object
+      description: 'Schema for an individual sample entry.'
+      properties:
+        libtype:
+          type: string
+          description: 'The library preparation type for this sample.'
+        adapter:
+          type: string
+          description: 'The adapter sequence for this sample.'
+        with_umi:
+          type: boolean
+          description: 'If true, indicates that the sample has UMIs.'
+        strandness:
+          type: boolean
+          description: 'If true, indicates that the sample is strand-specific.'
+        markdup:
+          type: boolean
+          description: 'If true, PCR duplicates will be marked for this sample.'
+        gene_norc:
+          type: boolean
+          description: 'If true, applies specific logic for gene counting for this sample.'
+        data:
+          type: array
+          description: 'A list of read sets for the sample. Each item in the array represents a set of FASTQ files (e.g., from a single lane or technical replicates to be processed together).'
+          items:
+            type: object
+            properties:
+              R1:
+                type: string
+                description: 'Path to the R1 (forward read) FASTQ file. For single-end data, this is the only read file.'
+              R2:
+                type: string
+                description: 'Path to the R2 (reverse read) FASTQ file. Required for paired-end data.'
+            required:
+              - R1
+              # Add 'R2' to this required list if all your samples MUST be paired-end.
+              # Your example data is all paired-end, so you might want to enforce this:
+              # - R2
+            # 'additionalProperties: false' ensures no other keys (like 'R3') are present in a read set.
+            additionalProperties: false
+          minItems: 1 # Each sample must have at least one read set defined.
+      required:
+        - data # The 'data' key is mandatory for each sample.
+    minProperties: 1 # The 'samples' section must define at least one sample.
+
+# List of top-level keys that MUST be present in the configuration file.
+required:
+  - base_change
+  - markdup
+  - strandness
+  - gene_norc
+  - splice_genome
+  - path
+  - genome_index
+  - reference
+  - samples

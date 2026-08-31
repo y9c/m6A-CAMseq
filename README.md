@@ -89,6 +89,11 @@ This package has been tested on Linux operating systems. It requires the followi
 - [hisat2-3n](https://github.com/DaehwanKimLab/hisat2/tree/hisat-3n)
 - [cutseq](https://github.com/y9c/cutseq)
 
+> [!NOTE]
+> The shared processing workflow comes from [trichromat](https://github.com/y9c/trichromat) (the pipeline template / base repo).
+> It is **vendored** (copied) into `external/trichromat/` so this repository is fully self-contained — no git submodules.
+> To update it to a newer trichromat release, copy the code from [y9c/trichromat](https://github.com/y9c/trichromat) into `external/trichromat/` and commit.
+
 ## Documentation
 
 The documentation is available at [https://y9c.github.io/m6A-CAMseq/](https://y9c.github.io/m6A-CAMseq/)

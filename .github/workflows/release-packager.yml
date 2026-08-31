@@ -14,11 +14,9 @@ jobs:
       packages: write # Required to push to GitHub Container Registry
 
     steps:
-      # 1. Get the source code and initialize submodules
+      # 1. Get the source code (trichromat code is vendored under external/trichromat, no submodules)
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          submodules: 'recursive'
 
       # 2. Get the short commit SHA and date for versioning and traceability
       - name: Get commit SHA and date

@@ -1,4 +1,0 @@
-[submodule "external/trichromat"]
-	path = external/trichromat
-	url = https://github.com/y9c/trichromat.git
-	shallow = true

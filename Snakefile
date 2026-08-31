@@ -45,10 +45,11 @@ rule all:
 
 module trichromat_workflow:
     snakefile:
-        # You can also link to the trichromat workflow directly from github
+        # trichromat is vendored (copied) into external/trichromat so this repo
+        # is self-contained and needs no git submodules. To refresh it, copy the
+        # latest code from https://github.com/y9c/trichromat into external/trichromat/.
+        # You can also wire the upstream workflow directly instead:
         # github("y9c/trichromat", path="Snakefile", tag="main")
-        # debugging only
-        # "../trichromat/Snakefile"
         "external/trichromat/Snakefile"
     config:
         config

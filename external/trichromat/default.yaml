@@ -1,0 +1,47 @@
+# build in configure for the pipeline
+path:
+  cutseq: /pipeline/bin/cutseq
+  samtools: /pipeline/samtools/bin/samtools
+  addtag: /pipeline/bin/add_tag
+  hisat3n: /pipeline/hisat2-hisat-3n/hisat-3n
+  hisat3nbuild: /pipeline/hisat2-hisat-3n/hisat-3n-build
+  hisat3ntable: /pipeline/hisat2-hisat-3n/hisat-3n-table
+  umicollapse: java -server -XX:InitialRAMPercentage=80.0 -XX:MaxRAMPercentage=80.0 -jar /pipeline/UMICollapse/umicollapse.jar bam
+  picard: java -server -XX:InitialRAMPercentage=80.0 -XX:MaxRAMPercentage=80.0 -jar /pipeline/picard/picard.jar
+  annotateMotif: python ./bin/annotate_motif.py
+  collectReadCounts: python ./bin/collect_read_counts.py
+  convertPileup: python ./bin/pileup_to_arrow.py
+  joinPileup: python ./bin/join_pileup.py
+  filterSites: python ./bin/filter_sites.py
+
+# m6A method, use A to G mutation
+# m5C method, use C to T mutation
+base_change: 'A,G'
+
+### For mapping
+# can be "ECLIP10", "ECLIP6", "TAKARAV3", "SACSEQV3", "STRANDED"
+# libtype: ECLIP6
+# with umi in the library or not
+# with_umi: true
+# by default, the pipeline will force remove the PCR duplicates based on the UMI
+# if UMI is not available, you can toggle the markdup to `false` to skip the PCR duplicate removal
+# markdup: true
+# by default, the pipeline will use the strandness information from the library
+# if the strandness is not available, set the strandness to `false`
+# strandness: true
+# whether map to the reverse strand of genes or not
+# gene_norc: true
+# whether the genome transcripts contains introns or not
+splice_genome: true
+
+### For site calling
+# number of flanking bases to be used for the motif
+motif_flanking: 2
+# remove "clustered reads", which are not converted properly
+drop_clustered: true
+
+cutoff:
+  min_uncon: 1
+  min_depth: 10
+  min_ratio: 0.05
+  min_pval: 0.05
